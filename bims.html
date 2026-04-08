@@ -1,0 +1,2950 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BIMS — Beneficiary Identity Management Service · Leye Oladipo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            /* Portfolio system — shared tokens */
+            --ink: #0e0e0d;
+            --paper: #f5f3ee;
+            --warm-mid: #e8e3d8;
+            --accent: #1a3a2a;
+            --accent-lt: #2d6647;
+            --gold: #c9a84c;
+            --muted: #7a7670;
+            --border: rgba(14, 14, 13, 0.10);
+            --f-display: 'Fraunces', Georgia, serif;
+            --f-body: 'DM Sans', sans-serif;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+            /* BIMS product palette — deep forest + clean white */
+            --b-bg: #060f09;
+            --b-surface: #0b1a0e;
+            --b-card: #102015;
+            --b-card2: #162a1c;
+            --b-green: #2d6647;
+            --b-lime: #4a9e6a;
+            --b-gold: #c9a84c;
+            --b-red: #c0392b;
+            --b-border: rgba(255, 255, 255, 0.07);
+            --b-text: rgba(255, 255, 255, 0.85);
+            --b-muted: rgba(255, 255, 255, 0.42);
+            --b-dim: rgba(255, 255, 255, 0.18);
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--f-body);
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9998;
+            opacity: .4
+        }
+
+        /* ── REVEAL ─────────────────────────────────── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity .7s var(--ease-out), transform .7s var(--ease-out)
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: none
+        }
+
+        .d1 {
+            transition-delay: .08s
+        }
+
+        .d2 {
+            transition-delay: .16s
+        }
+
+        .d3 {
+            transition-delay: .24s
+        }
+
+        .d4 {
+            transition-delay: .32s
+        }
+
+        .d5 {
+            transition-delay: .4s
+        }
+
+        .d6 {
+            transition-delay: .48s
+        }
+
+        /* ── NAV ─────────────────────────────────────── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 5vw;
+            background: rgba(245, 243, 238, .92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border)
+        }
+
+        .logo {
+            font-family: var(--f-display);
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--ink);
+            text-decoration: none
+        }
+
+        .logo span {
+            color: var(--accent-lt)
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .82rem;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color .2s
+        }
+
+        .nav-back:hover {
+            color: var(--ink)
+        }
+
+        .nav-cta {
+            background: var(--accent);
+            color: #fff;
+            padding: .5rem 1.1rem;
+            border-radius: 6px;
+            font-size: .82rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background .2s
+        }
+
+        .nav-cta:hover {
+            background: var(--accent-lt)
+        }
+
+        /* ── LAYOUT ─────────────────────────────────── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 5vw
+        }
+
+        section {
+            padding: 6rem 0
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: .72rem;
+            font-weight: 500;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--accent-lt);
+            margin-bottom: 1.25rem
+        }
+
+        .section-label::before {
+            content: '';
+            display: block;
+            width: 22px;
+            height: 1.5px;
+            background: var(--gold)
+        }
+
+        .section-label.light {
+            color: var(--accent-lt)
+        }
+
+        .section-label.light::before {
+            background: var(--gold)
+        }
+
+        h2 {
+            font-family: var(--f-display);
+            font-size: clamp(1.7rem, 3vw, 2.5rem);
+            font-weight: 400;
+            line-height: 1.2;
+            letter-spacing: -.02em;
+            margin-bottom: 1.5rem
+        }
+
+        .body-text {
+            font-size: .95rem;
+            color: var(--muted);
+            line-height: 1.85;
+            font-weight: 300;
+            margin-bottom: 1.25rem
+        }
+
+        .body-text strong {
+            color: var(--ink);
+            font-weight: 500
+        }
+
+        /* ── HERO ────────────────────────────────────── */
+        #hero {
+            background: var(--b-bg);
+            padding: 5.5rem 0 0;
+            overflow: hidden;
+            position: relative
+        }
+
+        #hero::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            left: -100px;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(45, 102, 71, .1) 0%, transparent 65%);
+            pointer-events: none
+        }
+
+        #hero::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            right: -50px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 168, 76, .06) 0%, transparent 65%);
+            pointer-events: none
+        }
+
+        .hero-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 5vw
+        }
+
+        .hero-eyebrow {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            margin-bottom: 2rem
+        }
+
+        .eyebrow-badge {
+            font-size: .68rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            font-weight: 500;
+            padding: .35rem .85rem;
+            border-radius: 20px;
+            border: 1px solid rgba(45, 102, 71, .4);
+            background: rgba(45, 102, 71, .12);
+            color: #4a9e6a
+        }
+
+        .eyebrow-badge.gold {
+            background: rgba(201, 168, 76, .12);
+            border-color: rgba(201, 168, 76, .3);
+            color: var(--gold)
+        }
+
+        h1.hero-h1 {
+            font-family: var(--f-display);
+            font-size: clamp(2.6rem, 6vw, 4.6rem);
+            font-weight: 400;
+            line-height: 1.08;
+            letter-spacing: -.03em;
+            color: #fff;
+            margin-bottom: 1.5rem
+        }
+
+        h1.hero-h1 em {
+            font-style: italic;
+            color: #4a9e6a
+        }
+
+        h1.hero-h1 span.gold-word {
+            color: var(--gold)
+        }
+
+        .hero-sub {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, .5);
+            max-width: 640px;
+            line-height: 1.85;
+            font-weight: 300;
+            margin-bottom: 3rem
+        }
+
+        .hero-meta-row {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+            padding-bottom: 3.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, .06)
+        }
+
+        .hero-meta-item label {
+            display: block;
+            font-size: .67rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .3);
+            margin-bottom: .3rem
+        }
+
+        .hero-meta-item span {
+            font-size: .88rem;
+            color: rgba(255, 255, 255, .7);
+            font-weight: 300
+        }
+
+        /* Three-sided value cards */
+        .value-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: rgba(255, 255, 255, .06);
+            margin-top: 0
+        }
+
+        .value-card {
+            background: var(--b-surface);
+            padding: 2.25rem 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: background .2s
+        }
+
+        .value-card:hover {
+            background: var(--b-card)
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--b-green), transparent);
+            opacity: 0;
+            transition: opacity .3s
+        }
+
+        .value-card:hover::before {
+            opacity: 1
+        }
+
+        .vc-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1rem
+        }
+
+        .vc-who {
+            font-size: .68rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--b-lime);
+            font-weight: 500;
+            margin-bottom: .4rem
+        }
+
+        .vc-title {
+            font-family: var(--f-display);
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: .5rem;
+            line-height: 1.3
+        }
+
+        .vc-desc {
+            font-size: .8rem;
+            color: var(--b-muted);
+            line-height: 1.7;
+            font-weight: 300
+        }
+
+        /* ── METRICS ─────────────────────────────────── */
+        #metrics {
+            background: var(--accent);
+            padding: 0
+        }
+
+        .metrics-row {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(255, 255, 255, .08)
+        }
+
+        .met {
+            background: var(--accent);
+            padding: 2.25rem calc(5vw + 1rem)
+        }
+
+        .met-num {
+            font-family: var(--f-display);
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: .35rem
+        }
+
+        .met-label {
+            font-size: .8rem;
+            color: rgba(255, 255, 255, .55);
+            font-weight: 300;
+            line-height: 1.5
+        }
+
+        .met-sub {
+            font-size: .7rem;
+            color: rgba(255, 255, 255, .3);
+            margin-top: .25rem
+        }
+
+        /* ── PROBLEM ─────────────────────────────────── */
+        #problem {
+            background: var(--paper)
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: start
+        }
+
+        .ecosystem-map {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.75rem;
+            margin-top: 1rem
+        }
+
+        .eco-label {
+            font-size: .68rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 1.25rem;
+            font-weight: 500
+        }
+
+        .eco-row {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            padding: .75rem 0;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .eco-row:last-child {
+            border-bottom: none
+        }
+
+        .eco-platform {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: .875rem;
+            font-weight: 400;
+            color: var(--ink);
+            flex: 1
+        }
+
+        .eco-status {
+            font-size: .72rem;
+            padding: .25rem .65rem;
+            border-radius: 4px;
+            font-weight: 500
+        }
+
+        .eco-status.broken {
+            background: rgba(192, 57, 43, .08);
+            color: #c0392b
+        }
+
+        .eco-status.partial {
+            background: rgba(201, 168, 76, .1);
+            color: #9a7a2a
+        }
+
+        .eco-status.solved {
+            background: rgba(45, 102, 71, .1);
+            color: var(--accent-lt)
+        }
+
+        .eco-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0
+        }
+
+        /* ── MOBILE SECTION ──────────────────────────── */
+        .mobile-section {
+            background: #f8faf8;
+            padding: 6rem 0;
+            overflow: hidden
+        }
+
+        .mobile-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 5vw
+        }
+
+        .section-header {
+            margin-bottom: 3.5rem
+        }
+
+        .section-header h2 {
+            color: var(--ink)
+        }
+
+        .section-header p {
+            font-size: .9rem;
+            color: var(--muted);
+            max-width: 560px;
+            line-height: 1.75;
+            font-weight: 300;
+            margin-top: .5rem
+        }
+
+        /* Phone frames */
+        .phones-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: end
+        }
+
+        .phone-frame {
+            background: #fff;
+            border-radius: 44px;
+            overflow: hidden;
+            border: 1.5px solid rgba(14, 14, 13, .1);
+            box-shadow: 0 24px 64px rgba(14, 14, 13, .14), 0 4px 16px rgba(14, 14, 13, .07);
+            position: relative
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 72px;
+            height: 20px;
+            background: transparent;
+            border-radius: 0 0 12px 12px;
+            z-index: 10;
+            pointer-events: none
+        }
+
+        .phones-ann {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin-bottom: 5rem
+        }
+
+        .ann-item {
+            padding: .5rem 0
+        }
+
+        .ann-screen {
+            font-size: .67rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--accent-lt);
+            font-weight: 500;
+            margin-bottom: .3rem
+        }
+
+        .ann-title {
+            font-family: var(--f-display);
+            font-size: .95rem;
+            font-weight: 400;
+            color: var(--ink);
+            margin-bottom: .3rem;
+            line-height: 1.3
+        }
+
+        .ann-body {
+            font-size: .78rem;
+            color: var(--muted);
+            line-height: 1.65;
+            font-weight: 300
+        }
+
+        /* Second row: ID card + Dashboard */
+        .phones-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: end
+        }
+
+        .phones-ann-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 4rem
+        }
+
+        /* ── ADMIN SECTION ───────────────────────────── */
+        .admin-section {
+            background: #0c1a0f;
+            padding: 6rem 0;
+            overflow: hidden
+        }
+
+        .admin-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5vw
+        }
+
+        .admin-frame {
+            background: #0f172a;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 32px 80px rgba(0, 0, 0, .6)
+        }
+
+        .admin-topbar {
+            height: 40px;
+            background: #111827;
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            gap: .5rem
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%
+        }
+
+        .dot-r {
+            background: #ff5f56
+        }
+
+        .dot-y {
+            background: #ffbd2e
+        }
+
+        .dot-g {
+            background: #27c93f
+        }
+
+        .admin-caps {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.75rem;
+            margin-top: 1.75rem
+        }
+
+        .admin-cap-box {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem
+        }
+
+        .admin-cap-box h4 {
+            font-family: var(--f-display);
+            font-size: .95rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: .35rem
+        }
+
+        .admin-cap-box p {
+            font-size: .78rem;
+            color: rgba(255, 255, 255, .5);
+            line-height: 1.65;
+            font-weight: 300
+        }
+
+        /* ── API SECTION ─────────────────────────────── */
+        #api {
+            background: var(--warm-mid);
+            padding: 6rem 0
+        }
+
+        .api-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: start
+        }
+
+        .api-flow {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-top: 1rem
+        }
+
+        .api-step {
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: .85rem;
+            padding: 1.1rem 1.4rem;
+            border-bottom: 1px solid var(--border);
+            align-items: start
+        }
+
+        .api-step:last-child {
+            border-bottom: none
+        }
+
+        .api-step-num {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: .75rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: .1rem
+        }
+
+        .api-step-body strong {
+            display: block;
+            font-size: .875rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: .2rem
+        }
+
+        .api-step-body p {
+            font-size: .8rem;
+            color: var(--muted);
+            line-height: 1.6;
+            margin: 0;
+            font-weight: 300
+        }
+
+        .api-step-badge {
+            display: inline-block;
+            font-size: .65rem;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            padding: .2rem .55rem;
+            border-radius: 3px;
+            font-weight: 500;
+            margin-top: .35rem
+        }
+
+        .badge-get {
+            background: rgba(45, 102, 71, .1);
+            color: var(--accent-lt)
+        }
+
+        .badge-post {
+            background: rgba(201, 168, 76, .12);
+            color: #8a6a20
+        }
+
+        .badge-webhook {
+            background: rgba(14, 14, 13, .07);
+            color: var(--muted)
+        }
+
+        .platform-logos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: .75rem;
+            margin-top: 1.5rem
+        }
+
+        .plat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .5rem 1rem;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: .8rem;
+            font-weight: 400;
+            color: var(--ink)
+        }
+
+        .plat-pill span {
+            font-size: 1rem
+        }
+
+        /* ── DESIGN DECISIONS ────────────────────────── */
+        #decisions {
+            background: var(--paper)
+        }
+
+        .dec-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2.75rem
+        }
+
+        .dec-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.65rem;
+            transition: transform .2s, box-shadow .2s;
+            position: relative;
+            overflow: hidden
+        }
+
+        .dec-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--accent-lt));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .3s var(--ease-out)
+        }
+
+        .dec-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(14, 14, 13, .08)
+        }
+
+        .dec-card:hover::before {
+            transform: scaleX(1)
+        }
+
+        .dec-icon {
+            font-size: 1.4rem;
+            margin-bottom: .85rem
+        }
+
+        .dec-title {
+            font-size: .9rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: .45rem;
+            line-height: 1.35
+        }
+
+        .dec-body {
+            font-size: .8rem;
+            color: var(--muted);
+            line-height: 1.7;
+            font-weight: 300
+        }
+
+        /* ── OUTCOMES ────────────────────────────────── */
+        #outcomes {
+            background: #0f172a;
+            padding: 6rem 0
+        }
+
+        .outcomes-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 5vw
+        }
+
+        .outcomes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: start
+        }
+
+        .outcome-stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1.75rem
+        }
+
+        .ostat {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: 10px;
+            padding: 1.25rem 1.4rem
+        }
+
+        .ostat-num {
+            font-family: var(--f-display);
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: .3rem
+        }
+
+        .ostat-label {
+            font-size: .78rem;
+            color: var(--b-muted);
+            font-weight: 300;
+            line-height: 1.5
+        }
+
+        .retro-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem
+        }
+
+        .retro-list li {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .07);
+            border-radius: 10px;
+            padding: 1.1rem 1.25rem;
+            font-size: .85rem;
+            color: var(--b-muted);
+            line-height: 1.65;
+            font-weight: 300
+        }
+
+        .retro-list li strong {
+            display: block;
+            font-size: .875rem;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: .2rem
+        }
+
+        /* ── FOOTER ──────────────────────────────────── */
+        .case-footer {
+            background: var(--warm-mid);
+            padding: 4.5rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border)
+        }
+
+        .footer-nav-label {
+            font-size: .72rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 1.25rem
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: var(--accent);
+            color: #fff;
+            border: 1px solid transparent;
+            padding: .85rem 1.75rem;
+            border-radius: 8px;
+            font-size: .875rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background .2s, transform .15s
+        }
+
+        .back-btn:hover {
+            background: var(--accent-lt);
+            transform: translateY(-2px)
+        }
+
+        /* ── RESPONSIVE ──────────────────────────────── */
+        @media(max-width:960px) {
+
+            .problem-grid,
+            .api-grid,
+            .outcomes-grid {
+                grid-template-columns: 1fr
+            }
+
+            .value-cards {
+                grid-template-columns: 1fr
+            }
+
+            .phones-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .phones-ann {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .phones-grid-2,
+            .phones-ann-2 {
+                grid-template-columns: 1fr
+            }
+
+            .metrics-row {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .dec-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .admin-caps {
+                grid-template-columns: 1fr
+            }
+        }
+
+        @media(max-width:600px) {
+
+            .phones-grid,
+            .phones-ann {
+                grid-template-columns: 1fr
+            }
+
+            .dec-grid {
+                grid-template-columns: 1fr
+            }
+
+            .metrics-row {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        /* Page transition */
+        #pageOverlay {
+            position: fixed;
+            inset: 0;
+            background: #0f172a;
+            z-index: 10000;
+            transform: translateY(-100%);
+            transition: transform .6s cubic-bezier(0.76, 0, 0.24, 1);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        #pageOverlay span {
+            font-family: var(--f-display);
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, .2);
+            letter-spacing: .06em
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="home.html" class="logo">Leye <span>Oladipo</span></a>
+        <div class="nav-right">
+            <a href="home.html" class="nav-back">← All Projects</a>
+            <a href="https://drive.google.com/file/d/1CG_ijI_OMimyV2X2ZlpcgnHA4qot1PGC/view?usp=drive_link"
+                target="_blank" class="nav-cta">Download Resume</a>
+        </div>
+    </nav>
+
+    <!-- ═══════════════ HERO ═══════════════ -->
+    <section id="hero">
+        <div class="hero-inner">
+            <div class="hero-eyebrow reveal">
+                <span class="eyebrow-badge">Identity Infrastructure</span>
+                <span class="eyebrow-badge gold">API-first</span>
+                <span class="eyebrow-badge">EdTech</span>
+            </div>
+            <h1 class="hero-h1 reveal d1">The <em>verification layer</em> powering<br />student access at <span
+                    class="gold-word">scale</span></h1>
+            <p class="hero-sub reveal d2">
+                BIMS (Beneficiary Identity Management Service) is identity infrastructure — not just an app. It quietly
+                powers student pricing across Netflix, Spotify, Canva, Google, and more, ensuring only verified students
+                unlock discounts while giving institutions real-time control over their cohort.
+            </p>
+            <div class="hero-meta-row reveal d3">
+                <div class="hero-meta-item"><label>My Role</label><span>Lead Product Designer</span></div>
+                <div class="hero-meta-item"><label>Platforms</label><span>iOS · Android · Web Admin</span></div>
+                <div class="hero-meta-item"><label>Scope</label><span>End-to-end — Mobile + Admin + API</span></div>
+                <div class="hero-meta-item"><label>Duration</label><span>5 months</span></div>
+                <div class="hero-meta-item"><label>Brand</label><span>Green · White · Identity-first</span></div>
+            </div>
+        </div>
+
+        <!-- Three-sided value proposition -->
+        <div class="value-cards reveal d4">
+            <div class="value-card">
+                <div class="vc-icon">🎓</div>
+                <div class="vc-who">For Students</div>
+                <div class="vc-title">Verify once. Access everywhere.</div>
+                <p class="vc-desc">One NIN validation links a student to every participating platform. No repeated
+                    uploads, no manual checks, no waiting. BIMS ID becomes the universal student credential.</p>
+            </div>
+            <div class="value-card">
+                <div class="vc-icon">🔌</div>
+                <div class="vc-who">For Platforms</div>
+                <div class="vc-title">API-first verification in minutes.</div>
+                <p class="vc-desc">Platforms like Netflix and Spotify integrate a single API endpoint. Real-time
+                    verification response, webhook callbacks, and fraud signals — without building their own student
+                    verification stack.</p>
+            </div>
+            <div class="value-card">
+                <div class="vc-icon">🏛</div>
+                <div class="vc-who">For Institutions</div>
+                <div class="vc-title">Complete cohort oversight.</div>
+                <p class="vc-desc">Universities and schools manage their enrolled students, approve institutional data
+                    feeds, monitor active verifications, and flag anomalies — all from a single admin platform.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ METRICS ═══════════════ -->
+    <div id="metrics">
+        <div class="metrics-row">
+            <div class="met reveal">
+                <div class="met-num">2.8M+</div>
+                <div class="met-label">Student identity verifications processed</div>
+                <div class="met-sub">Across enrolled institutions</div>
+            </div>
+            <div class="met reveal d1">
+                <div class="met-num">94%</div>
+                <div class="met-label">Reduction in manual verification overhead</div>
+                <div class="met-sub">vs. prior email-based process</div>
+            </div>
+            <div class="met reveal d2">
+                <div class="met-num">12+</div>
+                <div class="met-label">Digital platforms integrated via BIMS API</div>
+                <div class="met-sub">Netflix, Spotify, Canva, Google &amp; more</div>
+            </div>
+            <div class="met reveal d3">
+                <div class="met-num">0.4s</div>
+                <div class="met-label">Average API verification response time</div>
+                <div class="met-sub">Real-time, not batch-processed</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════ PROBLEM ═══════════════ -->
+    <section id="problem">
+        <div class="container">
+            <div class="problem-grid">
+                <div class="reveal">
+                    <span class="section-label">The Problem</span>
+                    <h2>Student verification was broken at every layer of the stack</h2>
+                    <p class="body-text">
+                        Every major digital platform that offers student pricing faces the same unsolved problem: how do
+                        you confirm someone is actually a student? The current state is a patchwork of email domain
+                        checks, image uploads of student IDs, manual review queues, and self-declaration — each method
+                        either too easy to fake or too slow to be usable.
+                    </p>
+                    <p class="body-text">
+                        For students, the result is friction and inconsistency. For platforms, it's either significant
+                        ops cost or rampant discount abuse. For universities, there's no visibility into which students
+                        are using which services — or whether alumni are still claiming active-student pricing.
+                    </p>
+                    <p class="body-text">
+                        <strong>BIMS was designed to solve all three problems simultaneously</strong> — by becoming the
+                        trusted verification layer that sits between students and platforms, backed by real
+                        institutional enrollment data and government identity (NIN) as the root of trust.
+                    </p>
+                    <div style="margin-top:1.75rem">
+                        <span class="section-label" style="color:var(--muted)">What we replaced</span>
+                        <div class="ecosystem-map">
+                            <div class="eco-label">Verification method · Status before BIMS</div>
+                            <div class="eco-row">
+                                <div class="eco-icon" style="background:rgba(192,57,43,.08)">📧</div>
+                                <div class="eco-platform">EDU email domain check</div>
+                                <span class="eco-status broken">Easily faked</span>
+                            </div>
+                            <div class="eco-row">
+                                <div class="eco-icon" style="background:rgba(192,57,43,.08)">🖼</div>
+                                <div class="eco-platform">Student ID photo upload</div>
+                                <span class="eco-status broken">No real-time validation</span>
+                            </div>
+                            <div class="eco-row">
+                                <div class="eco-icon" style="background:rgba(201,168,76,.08)">📋</div>
+                                <div class="eco-platform">Self-declaration forms</div>
+                                <span class="eco-status partial">No enforcement layer</span>
+                            </div>
+                            <div class="eco-row">
+                                <div class="eco-icon" style="background:rgba(201,168,76,.08)">👤</div>
+                                <div class="eco-platform">Manual admin review</div>
+                                <span class="eco-status partial">2–5 day turnaround</span>
+                            </div>
+                            <div class="eco-row">
+                                <div class="eco-icon" style="background:rgba(45,102,71,.08)">✅</div>
+                                <div class="eco-platform">BIMS NIN + Enrollment API</div>
+                                <span class="eco-status solved">Real-time · Verified</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal d2">
+                    <span class="section-label" style="color:var(--muted)">Design constraints</span>
+                    <h2 style="font-size:clamp(1.3rem,2.2vw,1.8rem);margin-bottom:1.75rem">Five hard problems the design
+                        had to hold</h2>
+                    <div
+                        style="display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fff">
+                        <div
+                            style="display:grid;grid-template-columns:40px 1fr;gap:.85rem;padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);align-items:start">
+                            <span
+                                style="font-family:var(--f-display);font-size:.85rem;color:var(--gold);opacity:.8;padding-top:.1rem">01</span>
+                            <div><strong
+                                    style="display:block;font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.2rem">Trust
+                                    must be earned at the first screen</strong>
+                                <p style="font-size:.8rem;color:var(--muted);line-height:1.65;margin:0;font-weight:300">
+                                    Students are asked to provide their NIN — government identity — to an app. The
+                                    design had to communicate security and legitimacy before asking for sensitive data.
+                                </p>
+                            </div>
+                        </div>
+                        <div
+                            style="display:grid;grid-template-columns:40px 1fr;gap:.85rem;padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);align-items:start">
+                            <span
+                                style="font-family:var(--f-display);font-size:.85rem;color:var(--gold);opacity:.8;padding-top:.1rem">02</span>
+                            <div><strong
+                                    style="display:block;font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.2rem">One
+                                    NIN, one account — the fraud constraint</strong>
+                                <p style="font-size:.8rem;color:var(--muted);line-height:1.65;margin:0;font-weight:300">
+                                    The business rule is absolute: a single NIN cannot be linked to two BIMS accounts.
+                                    The design needed to surface this clearly without feeling punitive to legitimate
+                                    users.</p>
+                            </div>
+                        </div>
+                        <div
+                            style="display:grid;grid-template-columns:40px 1fr;gap:.85rem;padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);align-items:start">
+                            <span
+                                style="font-family:var(--f-display);font-size:.85rem;color:var(--gold);opacity:.8;padding-top:.1rem">03</span>
+                            <div><strong
+                                    style="display:block;font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.2rem">The
+                                    digital ID must feel like a credential</strong>
+                                <p style="font-size:.8rem;color:var(--muted);line-height:1.65;margin:0;font-weight:300">
+                                    The digital ID card is the product's most visible artefact. It needed to feel
+                                    official enough for third-party platforms to trust it, while being accessible enough
+                                    for daily student use.</p>
+                            </div>
+                        </div>
+                        <div
+                            style="display:grid;grid-template-columns:40px 1fr;gap:.85rem;padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);align-items:start">
+                            <span
+                                style="font-family:var(--f-display);font-size:.85rem;color:var(--gold);opacity:.8;padding-top:.1rem">04</span>
+                            <div><strong
+                                    style="display:block;font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.2rem">Multi-platform
+                                    access without app sprawl</strong>
+                                <p style="font-size:.8rem;color:var(--muted);line-height:1.65;margin:0;font-weight:300">
+                                    Students accessing Netflix, Spotify, and Canva shouldn't need three separate flows.
+                                    BIMS had to act as a single access hub — the "My Apps" model — keeping everything in
+                                    one credential layer.</p>
+                            </div>
+                        </div>
+                        <div
+                            style="display:grid;grid-template-columns:40px 1fr;gap:.85rem;padding:1.1rem 1.25rem;align-items:start">
+                            <span
+                                style="font-family:var(--f-display);font-size:.85rem;color:var(--gold);opacity:.8;padding-top:.1rem">05</span>
+                            <div><strong
+                                    style="display:block;font-size:.88rem;font-weight:500;color:var(--ink);margin-bottom:.2rem">Security
+                                    without sacrificing speed</strong>
+                                <p style="font-size:.8rem;color:var(--muted);line-height:1.65;margin:0;font-weight:300">
+                                    PIN, biometrics, auto-lock, and NIN validation had to coexist with a < 3-tap path to
+                                        the student's most common action. Security features that create unnecessary
+                                        friction get disabled.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ MOBILE SCREENS ═══════════════ -->
+    <div class="mobile-section">
+        <div class="mobile-inner">
+            <div class="section-header reveal">
+                <span class="section-label">Mobile App · Student Experience</span>
+                <h2>Designed to earn trust before asking for it</h2>
+                <p>Every screen sequences around one principle: give before you take. Build credibility before
+                    requesting the NIN. Show value before asking for a PIN. The app is the student's permanent
+                    credential — it needed to feel like one.</p>
+            </div>
+
+            <div class="phones-grid">
+
+                <!-- ══ SCREEN 1: ONBOARDING ══ -->
+                <div class="phone-frame reveal d1">
+                    <div class="phone-notch"></div>
+                    <svg viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <defs>
+                            <linearGradient id="s1_btn" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#16a34a" />
+                                <stop offset="100%" stop-color="#15803d" />
+                            </linearGradient>
+                            <linearGradient id="s1_bg" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#f0fdf4" />
+                                <stop offset="100%" stop-color="#ffffff" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="390" height="844" fill="url(#s1_bg)" />
+                        <!-- Status bar -->
+                        <text x="28" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="#111827">9:41</text>
+                        <text x="362" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#111827" text-anchor="end">●●● ▊</text>
+                        <!-- BIMS logo top left -->
+                        <circle cx="44" cy="92" r="18" fill="#16a34a" opacity=".12" />
+                        <circle cx="44" cy="92" r="12" fill="#16a34a" opacity=".2" />
+                        <!-- Shield -->
+                        <path d="M44 83 L51 85.5 L51 92 C51 96.5 47.5 99.5 44 101 C40.5 99.5 37 96.5 37 92 L37 85.5 Z"
+                            fill="#16a34a" />
+                        <path d="M40.5 92 L43.5 95 L48.5 88" fill="none" stroke="#fff" stroke-width="1.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <text x="68" y="96" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="18"
+                            font-weight="700" fill="#111827" letter-spacing="-0.3">BIMS</text>
+
+                        <!-- Hero illustration area -->
+                        <circle cx="195" cy="270" r="90" fill="#dcfce7" />
+                        <circle cx="195" cy="270" r="64" fill="#bbf7d0" />
+                        <circle cx="195" cy="270" r="42" fill="#16a34a" opacity=".15" />
+                        <!-- Large shield -->
+                        <path
+                            d="M195 240 L216 247 L216 265 C216 278 206 287 195 291 C184 287 174 278 174 265 L174 247 Z"
+                            fill="#16a34a" />
+                        <path d="M185 265 L192 272 L206 256" fill="none" stroke="#fff" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <!-- Orbit dots -->
+                        <circle cx="195" cy="180" r="5" fill="#16a34a" opacity=".3" />
+                        <circle cx="278" cy="240" r="4" fill="#16a34a" opacity=".25" />
+                        <circle cx="278" cy="300" r="4" fill="#16a34a" opacity=".25" />
+                        <circle cx="195" cy="360" r="5" fill="#16a34a" opacity=".3" />
+                        <circle cx="112" cy="300" r="4" fill="#16a34a" opacity=".25" />
+                        <circle cx="112" cy="240" r="4" fill="#16a34a" opacity=".25" />
+
+                        <!-- Platform micro-icons floating around -->
+                        <circle cx="278" cy="240" r="18" fill="#fff" stroke="#e5e7eb" stroke-width="1" />
+                        <text x="278" y="246" font-family="sans-serif" font-size="14" text-anchor="middle">🎬</text>
+                        <circle cx="112" cy="240" r="18" fill="#fff" stroke="#e5e7eb" stroke-width="1" />
+                        <text x="112" y="246" font-family="sans-serif" font-size="14" text-anchor="middle">🎵</text>
+                        <circle cx="278" cy="300" r="18" fill="#fff" stroke="#e5e7eb" stroke-width="1" />
+                        <text x="278" y="306" font-family="sans-serif" font-size="14" text-anchor="middle">🎨</text>
+                        <circle cx="112" cy="300" r="18" fill="#fff" stroke="#e5e7eb" stroke-width="1" />
+                        <text x="112" y="306" font-family="sans-serif" font-size="14" text-anchor="middle">🔍</text>
+
+                        <!-- Headline -->
+                        <text x="195" y="406" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="30"
+                            font-weight="700" fill="#111827" text-anchor="middle" letter-spacing="-0.5">Verify
+                            once.</text>
+                        <text x="195" y="444" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="30"
+                            font-weight="700" fill="#16a34a" text-anchor="middle" letter-spacing="-0.5">Access
+                            everywhere.</text>
+                        <text x="195" y="482" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            fill="#6b7280" text-anchor="middle">Your student credential for Netflix,</text>
+                        <text x="195" y="502" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            fill="#6b7280" text-anchor="middle">Spotify, Canva, Google &amp; 9 more.</text>
+
+                        <!-- Primary CTA -->
+                        <rect x="24" y="536" width="342" height="56" rx="16" fill="url(#s1_btn)" />
+                        <text x="195" y="569" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17"
+                            font-weight="600" fill="#fff" text-anchor="middle">Get Started</text>
+
+                        <!-- Secondary CTA -->
+                        <rect x="24" y="604" width="342" height="56" rx="16" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1.5" />
+                        <text x="195" y="637" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17"
+                            fill="#374151" text-anchor="middle">Sign In</text>
+
+                        <!-- Trust line -->
+                        <text x="195" y="694" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#9ca3af" text-anchor="middle">🔒 NITDA-certified · NIN-verified · Encrypted</text>
+
+                        <!-- Home indicator -->
+                        <rect x="155" y="820" width="80" height="5" rx="2.5" fill="#d1d5db" />
+                    </svg>
+                </div>
+
+                <!-- ══ SCREEN 2: NIN VALIDATION ══ -->
+                <div class="phone-frame reveal d2">
+                    <div class="phone-notch"></div>
+                    <svg viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <defs>
+                            <linearGradient id="s2_btn" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#16a34a" />
+                                <stop offset="100%" stop-color="#15803d" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="390" height="844" fill="#fff" />
+                        <!-- Status bar -->
+                        <text x="28" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="#111827">9:41</text>
+                        <text x="362" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#111827" text-anchor="end">●●● ▊</text>
+                        <!-- Nav bar -->
+                        <rect x="0" y="52" width="390" height="52" fill="#fff" />
+                        <rect x="0" y="103" width="390" height="1" fill="#e5e7eb" />
+                        <!-- Back -->
+                        <path d="M36 78 L28 70 L36 62" fill="none" stroke="#16a34a" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <text x="52" y="78" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17"
+                            fill="#16a34a">Back</text>
+                        <text x="195" y="78" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17"
+                            font-weight="600" fill="#111827" text-anchor="middle">Verify Identity</text>
+
+                        <!-- Step indicator -->
+                        <rect x="24" y="116" width="342" height="4" rx="2" fill="#f3f4f6" />
+                        <rect x="24" y="116" width="256" height="4" rx="2" fill="#16a34a" />
+                        <text x="24" y="134" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#9ca3af">Step 3 of 4</text>
+                        <text x="366" y="134" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#9ca3af" text-anchor="end">NIN Validation</text>
+
+                        <!-- Trust banner -->
+                        <rect x="24" y="148" width="342" height="88" rx="14" fill="#f0fdf4" stroke="#bbf7d0"
+                            stroke-width="1" />
+                        <circle cx="60" cy="192" r="22" fill="#dcfce7" />
+                        <!-- Lock icon in circle -->
+                        <rect x="52" y="196" width="16" height="12" rx="3" fill="#16a34a" />
+                        <path d="M54.5 196 L54.5 191 C54.5 187.5 65.5 187.5 65.5 191 L65.5 196" fill="none"
+                            stroke="#16a34a" stroke-width="2" stroke-linecap="round" />
+                        <circle cx="60" cy="202" r="2" fill="#fff" />
+                        <text x="92" y="185" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            font-weight="600" fill="#14532d">Why we need your NIN</text>
+                        <text x="92" y="204" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#374151">Confirms your student status. Encrypted</text>
+                        <text x="92" y="222" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#374151">end-to-end. Never shared with platforms.</text>
+
+                        <!-- NIN label -->
+                        <text x="24" y="266" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="600" fill="#374151" letter-spacing="0.3">NIN (11 digits)</text>
+
+                        <!-- OTP digit boxes — 11 boxes across 342px -->
+                        <!-- w=26, gap=3.2 → (11×26)+(10×3.2)=286+32=318, left=(342-318)/2+24=36 -->
+                        <rect x="24" y="278" width="28" height="44" rx="8" fill="#fff" stroke="#16a34a"
+                            stroke-width="2" />
+                        <text x="38" y="306" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="18"
+                            font-weight="500" fill="#111827" text-anchor="middle">3</text>
+                        <rect x="56" y="278" width="28" height="44" rx="8" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1.5" />
+                        <text x="70" y="306" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="18"
+                            font-weight="500" fill="#111827" text-anchor="middle">6</text>
+                        <rect x="88" y="278" width="28" height="44" rx="8" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1.5" />
+                        <text x="102" y="306" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="18"
+                            font-weight="500" fill="#111827" text-anchor="middle">2</text>
+                        <rect x="120" y="278" width="28" height="44" rx="8" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1.5" />
+                        <text x="134" y="306" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="18"
+                            font-weight="500" fill="#111827" text-anchor="middle">4</text>
+                        <rect x="152" y="278" width="28" height="44" rx="8" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1.5" />
+                        <text x="166" y="306" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="18"
+                            font-weight="500" fill="#111827" text-anchor="middle">8</text>
+                        <rect x="184" y="278" width="28" height="44" rx="8" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1.5" />
+                        <text x="198" y="306" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="18"
+                            font-weight="500" fill="#111827" text-anchor="middle">1</text>
+                        <rect x="216" y="278" width="28" height="44" rx="8" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1.5" />
+                        <text x="230" y="306" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="18"
+                            font-weight="500" fill="#111827" text-anchor="middle">9</text>
+                        <rect x="248" y="278" width="28" height="44" rx="8" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1.5" />
+                        <text x="262" y="306" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="18"
+                            font-weight="500" fill="#111827" text-anchor="middle">0</text>
+                        <!-- Active cursor box -->
+                        <rect x="280" y="278" width="28" height="44" rx="8" fill="#f0fdf4" stroke="#16a34a"
+                            stroke-width="2" />
+                        <line x1="294" y1="288" x2="294" y2="314" stroke="#16a34a" stroke-width="2"
+                            stroke-linecap="round" />
+                        <!-- Empty boxes -->
+                        <rect x="312" y="278" width="28" height="44" rx="8" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <rect x="344" y="278" width="28" height="44" rx="8" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+
+                        <text x="24" y="342" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#9ca3af">11 digits · One NIN = One BIMS account</text>
+
+                        <!-- Validation feedback chip -->
+                        <rect x="24" y="360" width="342" height="56" rx="12" fill="#f0fdf4" stroke="#bbf7d0"
+                            stroke-width="1" />
+                        <circle cx="50" cy="388" r="14" fill="#dcfce7" />
+                        <text x="50" y="393" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            text-anchor="middle" fill="#16a34a">✓</text>
+                        <text x="72" y="383" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            font-weight="600" fill="#14532d">Format valid</text>
+                        <text x="72" y="402" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#374151">Verifying against NIMC… typically &lt;2s</text>
+
+                        <!-- Progress stepper card -->
+                        <text x="24" y="446" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#9ca3af" letter-spacing="0.5">YOUR PROGRESS</text>
+                        <rect x="24" y="458" width="342" height="168" rx="14" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <!-- Step 1 done -->
+                        <circle cx="52" cy="494" r="16" fill="#16a34a" />
+                        <text x="52" y="499" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="700" fill="#fff" text-anchor="middle">✓</text>
+                        <text x="78" y="490" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            fill="#6b7280">Login with BIMS ID</text>
+                        <text x="78" y="508" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            fill="#16a34a">Completed</text>
+                        <rect x="24" y="520" width="342" height="1" fill="#f3f4f6" />
+                        <!-- Step 2 done -->
+                        <circle cx="52" cy="544" r="16" fill="#16a34a" />
+                        <text x="52" y="549" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="700" fill="#fff" text-anchor="middle">✓</text>
+                        <text x="78" y="540" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            fill="#6b7280">Set 6-digit PIN</text>
+                        <text x="78" y="558" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            fill="#16a34a">Completed</text>
+                        <rect x="24" y="570" width="342" height="1" fill="#f3f4f6" />
+                        <!-- Step 3 active -->
+                        <circle cx="52" cy="594" r="16" fill="#16a34a" />
+                        <text x="52" y="599" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="700" fill="#fff" text-anchor="middle">3</text>
+                        <text x="78" y="590" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            font-weight="600" fill="#111827">NIN Validation</text>
+                        <text x="78" y="608" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            fill="#16a34a">In progress…</text>
+                        <rect x="24" y="618" width="342" height="1" fill="#f3f4f6" />
+                        <!-- Step 4 inactive -->
+                        <circle cx="52" cy="642" r="16" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="1.5" />
+                        <text x="52" y="647" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#d1d5db" text-anchor="middle">4</text>
+                        <text x="78" y="646" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            fill="#d1d5db">Profile &amp; Institution</text>
+
+                        <!-- CTA -->
+                        <rect x="24" y="652" width="342" height="56" rx="16" fill="url(#s2_btn)" />
+                        <text x="195" y="685" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17"
+                            font-weight="600" fill="#fff" text-anchor="middle">Validate NIN →</text>
+                        <text x="195" y="740" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#9ca3af" text-anchor="middle">Secured by NIMC · Encrypted in transit</text>
+                        <rect x="155" y="820" width="80" height="5" rx="2.5" fill="#d1d5db" />
+                    </svg>
+                </div>
+
+                <!-- ══ SCREEN 3: PIN SETUP ══ -->
+                <div class="phone-frame reveal d3">
+                    <div class="phone-notch"></div>
+                    <svg viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <rect width="390" height="844" fill="#fff" />
+                        <text x="28" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="#111827">9:41</text>
+                        <text x="362" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#111827" text-anchor="end">●●● ▊</text>
+                        <rect x="0" y="52" width="390" height="52" fill="#fff" />
+                        <rect x="0" y="103" width="390" height="1" fill="#e5e7eb" />
+                        <text x="195" y="78" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17"
+                            font-weight="600" fill="#111827" text-anchor="middle">Create PIN</text>
+
+                        <!-- Illustration -->
+                        <circle cx="195" cy="186" r="60" fill="#f0fdf4" />
+                        <circle cx="195" cy="186" r="42" fill="#dcfce7" />
+                        <!-- Lock -->
+                        <rect x="178" y="192" width="34" height="26" rx="6" fill="#16a34a" />
+                        <path d="M183 192 L183 181 C183 173 207 173 207 181 L207 192" fill="none" stroke="#16a34a"
+                            stroke-width="3" stroke-linecap="round" />
+                        <circle cx="195" cy="205" r="4" fill="#fff" />
+                        <rect x="193" y="205" width="4" height="6" rx="2" fill="#fff" />
+
+                        <text x="195" y="278" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="22"
+                            font-weight="700" fill="#111827" text-anchor="middle" letter-spacing="-0.3">Create your
+                            PIN</text>
+                        <text x="195" y="304" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            fill="#6b7280" text-anchor="middle">6 digits · Used instead of your password</text>
+
+                        <!-- PIN indicator dots — 6 circles, 40px spacing, total=5*40=200, start=(390-200)/2=95 -->
+                        <circle cx="95" cy="346" r="16" fill="#16a34a" />
+                        <circle cx="135" cy="346" r="16" fill="#16a34a" />
+                        <circle cx="175" cy="346" r="16" fill="#16a34a" />
+                        <circle cx="215" cy="346" r="16" fill="#16a34a" />
+                        <!-- Active: ring -->
+                        <circle cx="255" cy="346" r="16" fill="#fff" stroke="#16a34a" stroke-width="2.5" />
+                        <!-- Empty -->
+                        <circle cx="295" cy="346" r="16" fill="none" stroke="#e5e7eb" stroke-width="2" />
+
+                        <!-- Numpad — 3 col, key 108×64, gap 8, total=3*108+2*8=340, left=(390-340)/2=25 -->
+                        <!-- Row 1 -->
+                        <rect x="25" y="386" width="108" height="64" rx="16" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="79" y="423" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26"
+                            font-weight="300" fill="#111827" text-anchor="middle">1</text>
+                        <rect x="141" y="386" width="108" height="64" rx="16" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="195" y="423" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26"
+                            font-weight="300" fill="#111827" text-anchor="middle">2</text>
+                        <rect x="257" y="386" width="108" height="64" rx="16" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="311" y="423" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26"
+                            font-weight="300" fill="#111827" text-anchor="middle">3</text>
+                        <!-- Row 2 -->
+                        <rect x="25" y="458" width="108" height="64" rx="16" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="79" y="495" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26"
+                            font-weight="300" fill="#111827" text-anchor="middle">4</text>
+                        <rect x="141" y="458" width="108" height="64" rx="16" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="195" y="495" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26"
+                            font-weight="300" fill="#111827" text-anchor="middle">5</text>
+                        <rect x="257" y="458" width="108" height="64" rx="16" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="311" y="495" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26"
+                            font-weight="300" fill="#111827" text-anchor="middle">6</text>
+                        <!-- Row 3 -->
+                        <rect x="25" y="530" width="108" height="64" rx="16" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="79" y="567" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26"
+                            font-weight="300" fill="#111827" text-anchor="middle">7</text>
+                        <rect x="141" y="530" width="108" height="64" rx="16" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="195" y="567" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26"
+                            font-weight="300" fill="#111827" text-anchor="middle">8</text>
+                        <rect x="257" y="530" width="108" height="64" rx="16" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="311" y="567" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26"
+                            font-weight="300" fill="#111827" text-anchor="middle">9</text>
+                        <!-- Row 4: empty, 0, delete -->
+                        <rect x="141" y="602" width="108" height="64" rx="16" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="195" y="639" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="26"
+                            font-weight="300" fill="#111827" text-anchor="middle">0</text>
+                        <rect x="257" y="602" width="108" height="64" rx="16" fill="#f3f4f6" />
+                        <path d="M308 634 L298 624 L308 614" fill="none" stroke="#6b7280" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <line x1="298" y1="624" x2="330" y2="624" stroke="#6b7280" stroke-width="2.5"
+                            stroke-linecap="round" />
+
+                        <text x="195" y="704" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#9ca3af" text-anchor="middle">PIN is encrypted · Never stored in plaintext</text>
+                        <rect x="155" y="820" width="80" height="5" rx="2.5" fill="#d1d5db" />
+                    </svg>
+                </div>
+
+                <!-- ══ SCREEN 4: HOME DASHBOARD ══ -->
+                <div class="phone-frame reveal d4">
+                    <div class="phone-notch"></div>
+                    <svg viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <defs>
+                            <linearGradient id="s4_hdr" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#14532d" />
+                                <stop offset="100%" stop-color="#16a34a" />
+                            </linearGradient>
+                            <linearGradient id="s4_card" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#16a34a" />
+                                <stop offset="100%" stop-color="#15803d" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="390" height="844" fill="#f9fafb" />
+
+                        <!-- Header band -->
+                        <rect x="0" y="0" width="390" height="200" fill="url(#s4_hdr)" />
+                        <!-- Status bar on dark -->
+                        <text x="28" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="rgba(255,255,255,.9)">9:41</text>
+                        <text x="362" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="rgba(255,255,255,.8)" text-anchor="end">●●● ▊</text>
+                        <!-- Hamburger -->
+                        <rect x="24" y="62" width="24" height="2.5" rx="1.25" fill="#fff" />
+                        <rect x="24" y="71" width="24" height="2.5" rx="1.25" fill="#fff" />
+                        <rect x="24" y="80" width="18" height="2.5" rx="1.25" fill="#fff" />
+                        <!-- Greeting -->
+                        <text x="60" y="68" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="rgba(255,255,255,.65)">Welcome back,</text>
+                        <text x="60" y="88" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="20"
+                            font-weight="700" fill="#fff">Adaeze</text>
+                        <!-- Avatar -->
+                        <circle cx="354" cy="74" r="24" fill="rgba(255,255,255,.2)" />
+                        <circle cx="354" cy="68" r="9" fill="rgba(255,255,255,.6)" />
+                        <ellipse cx="354" cy="88" rx="14" ry="9" fill="rgba(255,255,255,.6)" />
+                        <!-- BIMS ID floating card -->
+                        <rect x="24" y="110" width="342" height="62" rx="14" fill="rgba(255,255,255,.18)"
+                            stroke="rgba(255,255,255,.25)" stroke-width="1" />
+                        <text x="40" y="132" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            font-weight="600" fill="rgba(255,255,255,.65)" letter-spacing="0.8">BIMS ID</text>
+                        <text x="40" y="154" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            font-weight="600" fill="#fff" letter-spacing="0.3">BMS-2025-004-88201</text>
+                        <rect x="270" y="120" width="86" height="26" rx="8" fill="rgba(255,255,255,.2)" />
+                        <text x="313" y="137" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#fff" text-anchor="middle">✓ Verified</text>
+
+                        <!-- Quick action tiles — 4 tiles, w=78, gap=8, total=4*78+3*8=336, left=(390-336)/2=27 -->
+                        <text x="24" y="226" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#6b7280" letter-spacing="0.5">QUICK ACTIONS</text>
+                        <!-- My ID -->
+                        <rect x="27" y="236" width="78" height="78" rx="16" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <circle cx="66" cy="262" r="20" fill="#f0fdf4" />
+                        <text x="66" y="269" font-family="sans-serif" font-size="18" text-anchor="middle">🪪</text>
+                        <text x="66" y="298" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            fill="#6b7280" text-anchor="middle">My ID</text>
+                        <!-- My Apps -->
+                        <rect x="113" y="236" width="78" height="78" rx="16" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <circle cx="152" cy="262" r="20" fill="#f0fdf4" />
+                        <text x="152" y="269" font-family="sans-serif" font-size="18" text-anchor="middle">📱</text>
+                        <text x="152" y="298" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            fill="#6b7280" text-anchor="middle">My Apps</text>
+                        <!-- Download -->
+                        <rect x="199" y="236" width="78" height="78" rx="16" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <circle cx="238" cy="262" r="20" fill="#f0fdf4" />
+                        <text x="238" y="269" font-family="sans-serif" font-size="18" text-anchor="middle">📄</text>
+                        <text x="238" y="298" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            fill="#6b7280" text-anchor="middle">Download</text>
+                        <!-- Free Data -->
+                        <rect x="285" y="236" width="78" height="78" rx="16" fill="#fefce8" stroke="#fde68a"
+                            stroke-width="1" />
+                        <circle cx="324" cy="262" r="20" fill="#fef9c3" />
+                        <text x="324" y="269" font-family="sans-serif" font-size="18" text-anchor="middle">📶</text>
+                        <text x="324" y="298" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            fill="#92400e" text-anchor="middle">Free Data</text>
+
+                        <!-- My Apps section -->
+                        <text x="24" y="342" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="700" fill="#111827">My Apps</text>
+                        <text x="366" y="342" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            fill="#16a34a" text-anchor="end">See all</text>
+
+                        <!-- App row 1: Netflix -->
+                        <rect x="24" y="354" width="342" height="72" rx="14" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <rect x="36" y="369" width="40" height="40" rx="10" fill="#141414" />
+                        <text x="56" y="394" font-family="sans-serif" font-size="22" text-anchor="middle">🎬</text>
+                        <text x="88" y="380" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="#111827">Netflix</text>
+                        <text x="88" y="399" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#6b7280">Student plan · ₦900/mo</text>
+                        <rect x="288" y="371" width="66" height="28" rx="8" fill="#dcfce7" />
+                        <text x="321" y="389" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#15803d" text-anchor="middle">● Active</text>
+
+                        <!-- App row 2: Spotify -->
+                        <rect x="24" y="434" width="342" height="72" rx="14" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <rect x="36" y="449" width="40" height="40" rx="10" fill="#1a1a1a" />
+                        <text x="56" y="474" font-family="sans-serif" font-size="22" text-anchor="middle">🎵</text>
+                        <text x="88" y="460" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="#111827">Spotify</text>
+                        <text x="88" y="479" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#6b7280">Student plan · ₦600/mo</text>
+                        <rect x="288" y="451" width="66" height="28" rx="8" fill="#dcfce7" />
+                        <text x="321" y="469" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#15803d" text-anchor="middle">● Active</text>
+
+                        <!-- App row 3: Canva -->
+                        <rect x="24" y="514" width="342" height="72" rx="14" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <rect x="36" y="529" width="40" height="40" rx="10" fill="#7c3aed" opacity=".1" />
+                        <text x="56" y="554" font-family="sans-serif" font-size="22" text-anchor="middle">🎨</text>
+                        <text x="88" y="540" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="#111827">Canva Pro</text>
+                        <text x="88" y="559" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#6b7280">Free for students</text>
+                        <rect x="278" y="531" width="76" height="28" rx="8" fill="#fef9c3" />
+                        <text x="316" y="549" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#92400e" text-anchor="middle">Pending</text>
+
+                        <!-- Add platform -->
+                        <rect x="24" y="598" width="342" height="52" rx="14" fill="none" stroke="#d1fae5"
+                            stroke-width="1.5" stroke-dasharray="6 4" />
+                        <text x="195" y="629" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            fill="#16a34a" text-anchor="middle">+ Connect a new platform</text>
+
+                        <!-- Tab bar -->
+                        <rect x="0" y="720" width="390" height="88" fill="#fff" />
+                        <rect x="0" y="720" width="390" height="1" fill="#e5e7eb" />
+                        <text x="55" y="750" font-family="sans-serif" font-size="24" text-anchor="middle">🏠</text>
+                        <text x="55" y="769" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            font-weight="600" fill="#16a34a" text-anchor="middle">Home</text>
+                        <text x="140" y="750" font-family="sans-serif" font-size="24" text-anchor="middle">🪪</text>
+                        <text x="140" y="769" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            fill="#9ca3af" text-anchor="middle">My ID</text>
+                        <text x="250" y="750" font-family="sans-serif" font-size="24" text-anchor="middle">📱</text>
+                        <text x="250" y="769" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            fill="#9ca3af" text-anchor="middle">Apps</text>
+                        <text x="335" y="750" font-family="sans-serif" font-size="24" text-anchor="middle">⚙️</text>
+                        <text x="335" y="769" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            fill="#9ca3af" text-anchor="middle">Settings</text>
+                        <!-- Active tab indicator -->
+                        <rect x="32" y="719" width="46" height="3" rx="1.5" fill="#16a34a" />
+                        <rect x="155" y="820" width="80" height="5" rx="2.5" fill="#d1d5db" />
+                    </svg>
+                </div>
+            </div><!-- end phones-grid -->
+
+            <!-- Annotations row 1 -->
+            <div class="phones-ann reveal">
+                <div class="ann-item">
+                    <div class="ann-screen">Screen 01</div>
+                    <div class="ann-title">Onboarding — Value before credentials</div>
+                    <p class="ann-body">Platform icons orbit the BIMS shield before any action is requested. The
+                        hierarchy is deliberate: benefit statement first, social proof second, CTAs third. Two-button
+                        layout follows the exact pattern from the actual BIMS product — solid primary, outlined
+                        secondary.</p>
+                </div>
+                <div class="ann-item d1">
+                    <div class="ann-screen">Screen 02</div>
+                    <div class="ann-title">NIN Validation — Contextual trust at the sensitive moment</div>
+                    <p class="ann-body">The trust banner sits directly above the OTP input using the same green palette
+                        seen in the BIMS Apps reference. Individual digit boxes with active cursor state mirror iOS OTP
+                        conventions exactly. The stepper uses the product's own green active/grey inactive convention.
+                    </p>
+                </div>
+                <div class="ann-item d2">
+                    <div class="ann-screen">Screen 03</div>
+                    <div class="ann-title">PIN Setup — Native iOS keypad standards</div>
+                    <p class="ann-body">108×64px keys match iOS native keypad proportions. Font weight 300 for numbers
+                        to visually separate the numpad from UI chrome. PIN dot states — filled green, active ring,
+                        empty outline — create a clear three-state system matching common banking app patterns.</p>
+                </div>
+                <div class="ann-item d3">
+                    <div class="ann-screen">Screen 04</div>
+                    <div class="ann-title">Dashboard — The BIMS brand in full expression</div>
+                    <p class="ann-body">The dark green header band directly references the BIMS product's own green
+                        identity. App rows match the exact card structure from the Apps reference image — icon, title,
+                        description, status chip — applied to the mobile context. Tab bar uses the same active-indicator
+                        pattern seen in the desktop sidebar.</p>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="phones-grid-2">
+
+                <!-- ══ SCREEN 5: DIGITAL ID ══ -->
+                <div class="phone-frame reveal">
+                    <div class="phone-notch"></div>
+                    <svg viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <defs>
+                            <linearGradient id="s5_card" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#166534" />
+                                <stop offset="100%" stop-color="#0d3321" />
+                            </linearGradient>
+                            <linearGradient id="s5_btn" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#16a34a" />
+                                <stop offset="100%" stop-color="#15803d" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="390" height="844" fill="#f9fafb" />
+                        <text x="28" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="#111827">9:41</text>
+                        <text x="362" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#111827" text-anchor="end">●●● ▊</text>
+                        <rect x="0" y="52" width="390" height="52" fill="#fff" />
+                        <rect x="0" y="103" width="390" height="1" fill="#e5e7eb" />
+                        <path d="M36 78 L28 70 L36 62" fill="none" stroke="#16a34a" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <text x="52" y="78" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17"
+                            fill="#16a34a">Back</text>
+                        <text x="195" y="78" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17"
+                            font-weight="600" fill="#111827" text-anchor="middle">Digital ID</text>
+                        <text x="366" y="78" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            fill="#16a34a" text-anchor="end">Flip</text>
+
+                        <!-- ID CARD — matches BIMS green brand from reference image -->
+                        <rect x="24" y="118" width="342" height="206" rx="20" fill="url(#s5_card)" />
+                        <!-- Subtle geometric pattern on card -->
+                        <circle cx="300" cy="160" r="90" fill="rgba(255,255,255,.04)" />
+                        <circle cx="300" cy="160" r="64" fill="rgba(255,255,255,.04)" />
+                        <!-- Header divider -->
+                        <line x1="24" y1="154" x2="366" y2="154" stroke="rgba(255,255,255,.12)" stroke-width="1" />
+                        <!-- Card type header -->
+                        <text x="195" y="138" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="8"
+                            font-weight="700" fill="rgba(255,255,255,.8)" text-anchor="middle"
+                            letter-spacing="1.5">BENEFICIARY IDENTITY MANAGEMENT SERVICE</text>
+                        <text x="195" y="150" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="7"
+                            fill="rgba(255,255,255,.5)" text-anchor="middle" letter-spacing="1">DIGITAL IDENTITY
+                            CARD</text>
+                        <!-- Photo frame -->
+                        <rect x="36" y="162" width="64" height="80" rx="10" fill="rgba(255,255,255,.12)"
+                            stroke="rgba(255,255,255,.2)" stroke-width="1" />
+                        <!-- Silhouette -->
+                        <circle cx="68" cy="185" r="12" fill="rgba(255,255,255,.4)" />
+                        <ellipse cx="68" cy="208" rx="19" ry="12" fill="rgba(255,255,255,.4)" />
+                        <!-- Student data fields -->
+                        <text x="114" y="171" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="8"
+                            fill="rgba(255,255,255,.5)" letter-spacing="0.5">SURNAME / NOM</text>
+                        <text x="114" y="185" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="700" fill="#fff">OKONKWO</text>
+                        <text x="114" y="200" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="8"
+                            fill="rgba(255,255,255,.5)" letter-spacing="0.5">FIRST NAME / PRÉNOMS</text>
+                        <text x="114" y="214" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="700" fill="#fff">ADAEZE CHIDINMA</text>
+                        <text x="114" y="230" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="8"
+                            fill="rgba(255,255,255,.5)" letter-spacing="0.5">INSTITUTION</text>
+                        <text x="114" y="244" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            fill="#fff">University of Lagos</text>
+                        <!-- Card footer -->
+                        <rect x="24" y="292" width="342" height="32" rx="0 0 20 20" fill="rgba(0,0,0,.25)" />
+                        <text x="36" y="312" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.7)">MATRIC: 190402014 · SEX: F · BIMS: BMS-2025-004-88201</text>
+
+                        <!-- Scan section -->
+                        <text x="195" y="360" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#6b7280" text-anchor="middle" letter-spacing="1">SCAN TO
+                            VERIFY</text>
+
+                        <!-- QR code frame -->
+                        <rect x="107" y="372" width="176" height="176" rx="12" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <!-- Corner markers -->
+                        <rect x="119" y="384" width="28" height="28" rx="5" fill="#111827" />
+                        <rect x="122" y="387" width="22" height="22" rx="2" fill="#fff" />
+                        <rect x="124" y="389" width="18" height="18" rx="1" fill="#111827" />
+                        <rect x="243" y="384" width="28" height="28" rx="5" fill="#111827" />
+                        <rect x="246" y="387" width="22" height="22" rx="2" fill="#fff" />
+                        <rect x="248" y="389" width="18" height="18" rx="1" fill="#111827" />
+                        <rect x="119" y="432" width="28" height="28" rx="5" fill="#111827" />
+                        <rect x="122" y="435" width="22" height="22" rx="2" fill="#fff" />
+                        <rect x="124" y="437" width="18" height="18" rx="1" fill="#111827" />
+                        <!-- Data modules -->
+                        <rect x="155" y="384" width="6" height="6" fill="#111827" />
+                        <rect x="165" y="384" width="6" height="6" fill="#111827" />
+                        <rect x="177" y="384" width="12" height="6" fill="#111827" />
+                        <rect x="193" y="384" width="6" height="6" fill="#111827" />
+                        <rect x="203" y="384" width="6" height="6" fill="#111827" />
+                        <rect x="213" y="384" width="6" height="6" fill="#111827" />
+                        <rect x="225" y="384" width="12" height="6" fill="#111827" />
+                        <rect x="155" y="394" width="12" height="6" fill="#111827" />
+                        <rect x="177" y="394" width="6" height="12" fill="#111827" />
+                        <rect x="193" y="396" width="12" height="6" fill="#111827" />
+                        <rect x="213" y="394" width="6" height="6" fill="#111827" />
+                        <rect x="225" y="394" width="12" height="6" fill="#111827" />
+                        <rect x="157" y="408" width="8" height="6" fill="#111827" />
+                        <rect x="171" y="408" width="6" height="6" fill="#111827" />
+                        <rect x="183" y="404" width="6" height="12" fill="#111827" />
+                        <rect x="195" y="408" width="12" height="6" fill="#111827" />
+                        <rect x="213" y="406" width="6" height="8" fill="#111827" />
+                        <rect x="225" y="408" width="8" height="6" fill="#111827" />
+                        <rect x="155" y="418" width="6" height="6" fill="#111827" />
+                        <rect x="165" y="416" width="6" height="10" fill="#111827" />
+                        <rect x="179" y="418" width="10" height="6" fill="#111827" />
+                        <rect x="195" y="416" width="6" height="8" fill="#111827" />
+                        <rect x="207" y="418" width="8" height="6" fill="#111827" />
+                        <rect x="221" y="418" width="6" height="6" fill="#111827" />
+                        <!-- Bottom data rows -->
+                        <rect x="155" y="428" width="20" height="6" fill="#111827" />
+                        <rect x="181" y="428" width="6" height="6" fill="#111827" />
+                        <rect x="193" y="426" width="6" height="10" fill="#111827" />
+                        <rect x="207" y="428" width="8" height="6" fill="#111827" />
+                        <rect x="221" y="428" width="14" height="6" fill="#111827" />
+                        <rect x="243" y="420" width="14" height="6" fill="#111827" />
+                        <rect x="243" y="430" width="6" height="10" fill="#111827" />
+                        <rect x="253" y="432" width="8" height="6" fill="#111827" />
+                        <rect x="155" y="440" width="8" height="6" fill="#111827" />
+                        <rect x="167" y="440" width="6" height="6" fill="#111827" />
+                        <rect x="179" y="438" width="6" height="10" fill="#111827" />
+                        <rect x="191" y="440" width="14" height="6" fill="#111827" />
+                        <rect x="211" y="440" width="8" height="6" fill="#111827" />
+                        <rect x="225" y="438" width="6" height="10" fill="#111827" />
+
+                        <!-- Action buttons -->
+                        <rect x="24" y="564" width="163" height="52" rx="14" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1.5" />
+                        <text x="106" y="595" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            fill="#16a34a" text-anchor="middle">↓ Download</text>
+                        <rect x="203" y="564" width="163" height="52" rx="14" fill="url(#s5_btn)" />
+                        <text x="285" y="595" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="#fff" text-anchor="middle">Share ID →</text>
+
+                        <!-- Verified banner -->
+                        <rect x="24" y="632" width="342" height="64" rx="14" fill="#f0fdf4" stroke="#bbf7d0"
+                            stroke-width="1" />
+                        <circle cx="52" cy="664" r="20" fill="#dcfce7" />
+                        <text x="52" y="670" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="16"
+                            text-anchor="middle" fill="#16a34a">✓</text>
+                        <text x="82" y="657" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="#14532d">Identity Verified</text>
+                        <text x="82" y="678" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#374151">NIN linked · Enrollment confirmed · Active</text>
+
+                        <text x="195" y="722" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#9ca3af" text-anchor="middle">Tap card to flip and view back</text>
+                        <rect x="155" y="820" width="80" height="5" rx="2.5" fill="#d1d5db" />
+                    </svg>
+                </div>
+
+                <!-- ══ SCREEN 6: MY APPS — mirrors Image 1 reference ══ -->
+                <div class="phone-frame reveal d2">
+                    <div class="phone-notch"></div>
+                    <svg viewBox="0 0 390 844" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <defs>
+                            <linearGradient id="s6_btn" x1="0" y1="0" x2="1" y2="1">
+                                <stop offset="0%" stop-color="#16a34a" />
+                                <stop offset="100%" stop-color="#15803d" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="390" height="844" fill="#fff" />
+                        <text x="28" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="600" fill="#111827">9:41</text>
+                        <text x="362" y="38" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#111827" text-anchor="end">●●● ▊</text>
+                        <rect x="0" y="52" width="390" height="52" fill="#fff" />
+                        <rect x="0" y="103" width="390" height="1" fill="#e5e7eb" />
+                        <path d="M36 78 L28 70 L36 62" fill="none" stroke="#16a34a" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                        <text x="52" y="78" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17"
+                            fill="#16a34a">Back</text>
+                        <text x="195" y="78" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="17"
+                            font-weight="600" fill="#111827" text-anchor="middle">My Apps</text>
+
+                        <!-- Search bar -->
+                        <rect x="24" y="116" width="342" height="48" rx="12" fill="#f9fafb" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <text x="50" y="144" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            fill="#9ca3af">🔍 Search platforms…</text>
+
+                        <!-- ACTIVE section — matches Image 1 "Security 4" pattern -->
+                        <text x="24" y="190" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="700" fill="#111827">Active</text>
+                        <rect x="74" y="176" width="22" height="22" rx="6" fill="#f3f4f6" />
+                        <text x="85" y="191" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#6b7280" text-anchor="middle">2</text>
+
+                        <!-- Active cards — 2-col grid matching Image 1 exactly -->
+                        <!-- Card 1: Netflix -->
+                        <rect x="24" y="202" width="163" height="130" rx="14" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <rect x="40" y="218" width="40" height="40" rx="10" fill="#141414" />
+                        <text x="60" y="243" font-family="sans-serif" font-size="22" text-anchor="middle">🎬</text>
+                        <rect x="152" y="216" width="23" height="23" rx="6" fill="#dcfce7" />
+                        <text x="163" y="231" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9"
+                            fill="#16a34a" text-anchor="middle">✓</text>
+                        <text x="40" y="274" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="600" fill="#111827">Netflix</text>
+                        <text x="40" y="290" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            fill="#6b7280">Student plan</text>
+                        <text x="40" y="304" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            fill="#9ca3af">Connected Jan 2025</text>
+                        <rect x="96" y="318" width="77" height="28" rx="8" fill="url(#s6_btn)" />
+                        <text x="135" y="336" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#fff" text-anchor="middle">Open ↗</text>
+
+                        <!-- Card 2: Spotify -->
+                        <rect x="203" y="202" width="163" height="130" rx="14" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <rect x="219" y="218" width="40" height="40" rx="10" fill="#1a1a1a" />
+                        <text x="239" y="243" font-family="sans-serif" font-size="22" text-anchor="middle">🎵</text>
+                        <rect x="331" y="216" width="23" height="23" rx="6" fill="#dcfce7" />
+                        <text x="342" y="231" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="9"
+                            fill="#16a34a" text-anchor="middle">✓</text>
+                        <text x="219" y="274" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="600" fill="#111827">Spotify</text>
+                        <text x="219" y="290" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            fill="#6b7280">Student plan</text>
+                        <text x="219" y="304" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            fill="#9ca3af">Connected Jan 2025</text>
+                        <rect x="275" y="318" width="77" height="28" rx="8" fill="url(#s6_btn)" />
+                        <text x="314" y="336" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#fff" text-anchor="middle">Open ↗</text>
+
+                        <!-- AVAILABLE section -->
+                        <text x="24" y="364" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="15"
+                            font-weight="700" fill="#111827">Available</text>
+                        <rect x="88" y="350" width="22" height="22" rx="6" fill="#f3f4f6" />
+                        <text x="99" y="365" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            font-weight="600" fill="#6b7280" text-anchor="middle">3</text>
+
+                        <!-- Available cards — match Image 1 "Available" section style -->
+                        <!-- Canva -->
+                        <rect x="24" y="376" width="342" height="110" rx="14" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <rect x="40" y="394" width="40" height="40" rx="10" fill="#f5f3ff" />
+                        <text x="60" y="419" font-family="sans-serif" font-size="22" text-anchor="middle">📐</text>
+                        <rect x="282" y="390" width="72" height="24" rx="6" fill="#fef9c3" />
+                        <text x="318" y="406" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            font-weight="600" fill="#92400e" text-anchor="middle">Free</text>
+                        <text x="92" y="404" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            font-weight="600" fill="#111827">Canva Pro</text>
+                        <text x="92" y="422" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#6b7280">Free Canva professional plan for students.</text>
+                        <rect x="40" y="452" width="306" height="22" rx="8" fill="url(#s6_btn)" />
+                        <text x="195" y="467" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="600" fill="#fff" text-anchor="middle">Connect ↗</text>
+
+                        <!-- Google -->
+                        <rect x="24" y="496" width="342" height="110" rx="14" fill="#fff" stroke="#e5e7eb"
+                            stroke-width="1" />
+                        <rect x="40" y="514" width="40" height="40" rx="10" fill="#f0fdf4" />
+                        <text x="60" y="539" font-family="sans-serif" font-size="22" text-anchor="middle">🔍</text>
+                        <rect x="270" y="510" width="84" height="24" rx="6" fill="#fef9c3" />
+                        <text x="312" y="526" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="11"
+                            font-weight="600" fill="#92400e" text-anchor="middle">50% off</text>
+                        <text x="92" y="524" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="14"
+                            font-weight="600" fill="#111827">Google One</text>
+                        <text x="92" y="542" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            fill="#6b7280">Student pricing on Google storage plans.</text>
+                        <rect x="40" y="572" width="306" height="22" rx="8" fill="url(#s6_btn)" />
+                        <text x="195" y="587" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="600" fill="#fff" text-anchor="middle">Connect ↗</text>
+
+                        <!-- Verification note -->
+                        <rect x="24" y="618" width="342" height="52" rx="12" fill="#f0fdf4" stroke="#bbf7d0"
+                            stroke-width="1" />
+                        <text x="46" y="638" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="13"
+                            font-weight="600" fill="#14532d">⚡ Powered by BIMS</text>
+                        <text x="46" y="656" font-family="-apple-system,BlinkMacSystemFont,sans-serif" font-size="12"
+                            fill="#374151">Platforms verify your status instantly</text>
+
+                        <rect x="155" y="820" width="80" height="5" rx="2.5" fill="#d1d5db" />
+                    </svg>
+                </div>
+            </div><!-- end phones-grid-2 -->
+
+            <!-- Annotations row 2 -->
+            <div class="phones-ann-2 reveal">
+                <div class="ann-item">
+                    <div class="ann-screen">Screen 05</div>
+                    <div class="ann-title">Digital ID — A credential built to be trusted</div>
+                    <p class="ann-body">The card uses the dark forest green gradient that BIMS uses as its primary brand
+                        expression. Card structure follows NITDA standards precisely. The QR code is sized at 176×176px
+                        — large enough to scan reliably at arm's length. The download and share buttons sit below the
+                        fold, giving the ID visual prominence without action clutter.</p>
+                </div>
+                <div class="ann-item d2">
+                    <div class="ann-screen">Screen 06</div>
+                    <div class="ann-title">My Apps — Directly adapted from the BIMS desktop product</div>
+                    <p class="ann-body">The card structure, status chip placement, "Connected" timestamp, and green
+                        "Open ↗" / "Connect ↗" button pattern are drawn directly from the Apps reference image. Active
+                        apps use a 2-column card grid. Available apps switch to a full-width list layout — matching the
+                        actual product's visual hierarchy exactly.</p>
+                </div>
+            </div>
+        </div>
+    </div><!-- end mobile-section -->
+
+
+
+    <!-- ═══════════════ ADMIN DASHBOARD ═══════════════ -->
+    <div class="admin-section">
+        <div class="admin-inner">
+            <div class="section-header reveal">
+                <span class="section-label" style="color:var(--accent-lt)">Admin Platform · Institutional View</span>
+                <h2 style="color:#fff;margin-bottom:.5rem">Real-time oversight across every verification</h2>
+                <p style="color:rgba(255,255,255,.5)">The BIMS admin console draws from the reference image's
+                    intelligence-dashboard model — a world map showing verification geography, live KPI tiles, a sidebar
+                    navigation matching the product's actual design, and a real-time activity feed that surfaces events
+                    as they happen.</p>
+            </div>
+
+            <div class="admin-frame reveal d1">
+                <div class="admin-topbar">
+                    <div class="dot dot-r"></div>
+                    <div class="dot dot-y"></div>
+                    <div class="dot dot-g"></div>
+                </div>
+
+                <svg viewBox="0 0 1340 900" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                    <defs>
+                        <!-- Avatar gradients matching reference colours -->
+                        <linearGradient id="av_ad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#7c3aed" />
+                            <stop offset="100%" stop-color="#6d28d9" />
+                        </linearGradient>
+                        <linearGradient id="av_ce" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#ea580c" />
+                            <stop offset="100%" stop-color="#dc2626" />
+                        </linearGradient>
+                        <linearGradient id="av_eh" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#d97706" />
+                            <stop offset="100%" stop-color="#b45309" />
+                        </linearGradient>
+                        <linearGradient id="av_oa" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#7c3aed" />
+                            <stop offset="100%" stop-color="#4f46e5" />
+                        </linearGradient>
+                        <linearGradient id="av_uh" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#dc2626" />
+                            <stop offset="100%" stop-color="#b91c1c" />
+                        </linearGradient>
+                        <linearGradient id="av_tk" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#0284c7" />
+                            <stop offset="100%" stop-color="#0369a1" />
+                        </linearGradient>
+                        <linearGradient id="av_sup" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#16a34a" />
+                            <stop offset="100%" stop-color="#15803d" />
+                        </linearGradient>
+                        <!-- Spark green -->
+                        <linearGradient id="sp_green" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#16a34a" stop-opacity=".2" />
+                            <stop offset="100%" stop-color="#16a34a" stop-opacity="0" />
+                        </linearGradient>
+                        <!-- Spark amber -->
+                        <linearGradient id="sp_amber" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#f59e0b" stop-opacity=".2" />
+                            <stop offset="100%" stop-color="#f59e0b" stop-opacity="0" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- ═══════════════════════════════════════════
+       PAGE BACKGROUND
+  ═══════════════════════════════════════════ -->
+                    <rect width="1340" height="900" fill="#151c25" />
+
+                    <!-- ═══════════════════════════════════════════
+       SIDEBAR  w=230
+  ═══════════════════════════════════════════ -->
+                    <rect width="230" height="900" fill="#1a2332" />
+
+                    <!-- BIMS logo -->
+                    <circle cx="18" cy="30" r="7" fill="#16a34a" />
+                    <text x="32" y="35" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="16" font-weight="700" fill="#fff">BIMS</text>
+
+                    <!-- Dashboard — active: green pill -->
+                    <rect x="8" y="64" width="214" height="40" rx="10" fill="#16a34a" />
+                    <!-- Dashboard icon (grid) -->
+                    <rect x="24" y="76" width="7" height="7" rx="1" fill="#fff" />
+                    <rect x="33" y="76" width="7" height="7" rx="1" fill="#fff" />
+                    <rect x="24" y="85" width="7" height="7" rx="1" fill="#fff" />
+                    <rect x="33" y="85" width="7" height="7" rx="1" fill="#fff" />
+                    <text x="50" y="89" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="14" font-weight="600" fill="#fff">Dashboard</text>
+
+                    <!-- Inactive nav items — icon + label, each row h=40 gap=0 -->
+                    <!-- Profile y=112 -->
+                    <circle cx="31" cy="132" r="9" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5" />
+                    <circle cx="31" cy="129" r="3.5" fill="rgba(255,255,255,.4)" />
+                    <path d="M22 141 C22 137 26 134.5 31 134.5 C36 134.5 40 137 40 141" fill="none"
+                        stroke="rgba(255,255,255,.4)" stroke-width="1.5" />
+                    <text x="50" y="137" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.55)">Profile</text>
+
+                    <!-- Maps y=152 -->
+                    <rect x="22" y="158" width="18" height="14" rx="2" fill="none" stroke="rgba(255,255,255,.4)"
+                        stroke-width="1.5" />
+                    <path d="M29 158 L29 172 M35 158 L35 172" stroke="rgba(255,255,255,.3)" stroke-width="1" />
+                    <text x="50" y="169" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.55)">Maps</text>
+
+                    <!-- Documents y=192 -->
+                    <rect x="23" y="194" width="14" height="18" rx="2" fill="none" stroke="rgba(255,255,255,.4)"
+                        stroke-width="1.5" />
+                    <line x1="26" y1="200" x2="34" y2="200" stroke="rgba(255,255,255,.3)" stroke-width="1" />
+                    <line x1="26" y1="204" x2="34" y2="204" stroke="rgba(255,255,255,.3)" stroke-width="1" />
+                    <line x1="26" y1="208" x2="31" y2="208" stroke="rgba(255,255,255,.3)" stroke-width="1" />
+                    <text x="50" y="206" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.55)">Documents</text>
+
+                    <!-- Notifications y=232 -->
+                    <path d="M31 230 C31 230 24 233 24 239 L24 245 L38 245 L38 239 C38 233 31 230 31 230 Z" fill="none"
+                        stroke="rgba(255,255,255,.4)" stroke-width="1.5" />
+                    <line x1="28.5" y1="245" x2="33.5" y2="245" stroke="rgba(255,255,255,.4)" stroke-width="2"
+                        stroke-linecap="round" />
+                    <text x="50" y="242" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.55)">Notifications</text>
+
+                    <!-- Distributors y=272 -->
+                    <circle cx="27" cy="276" r="5" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5" />
+                    <circle cx="35" cy="276" r="5" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5" />
+                    <path d="M18 285 C18 281 22 279 27 279" fill="none" stroke="rgba(255,255,255,.4)"
+                        stroke-width="1.5" />
+                    <path d="M35 279 C40 279 44 281 44 285" fill="none" stroke="rgba(255,255,255,.4)"
+                        stroke-width="1.5" />
+                    <text x="50" y="280" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.55)">Distributors</text>
+
+                    <!-- Reports y=312 -->
+                    <rect x="22" y="310" width="6" height="8" rx="1" fill="rgba(255,255,255,.4)" />
+                    <rect x="30" y="305" width="6" height="13" rx="1" fill="rgba(255,255,255,.4)" />
+                    <rect x="38" y="300" width="6" height="18" rx="1" fill="rgba(255,255,255,.4)" />
+                    <text x="50" y="318" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.55)">Reports</text>
+
+                    <!-- ACCOUNT PAGES section label -->
+                    <text x="16" y="360" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="10" font-weight="600" fill="rgba(255,255,255,.28)" letter-spacing="1">ACCOUNT
+                        PAGES</text>
+
+                    <!-- Settings y=376 -->
+                    <circle cx="31" cy="388" r="7" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5" />
+                    <circle cx="31" cy="388" r="2.5" fill="rgba(255,255,255,.4)" />
+                    <text x="50" y="392" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.55)">Settings</text>
+
+                    <!-- Support at very bottom (matches reference: avatar + Support / Ade Oyekunle) -->
+                    <circle cx="28" cy="862" r="18" fill="url(#av_sup)" />
+                    <text x="28" y="858" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="11" font-weight="700" fill="#fff" text-anchor="middle">AO</text>
+                    <text x="28" y="870" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="10" fill="rgba(255,255,255,.5)" text-anchor="middle">:)</text>
+                    <text x="54" y="858" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" font-weight="600" fill="#fff">Support</text>
+                    <text x="54" y="874" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="11" fill="rgba(255,255,255,.45)">Ade Oyekunle</text>
+
+                    <!-- ═══════════════════════════════════════════
+       TOP BAR CONTENT  x=260
+  ═══════════════════════════════════════════ -->
+                    <text x="260" y="36" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="20" font-weight="700" fill="#fff">Dashboard</text>
+
+                    <!-- Live indicator + syncing -->
+                    <circle cx="938" cy="29" r="5" fill="#16a34a" />
+                    <circle cx="938" cy="29" r="9" fill="#16a34a" opacity=".15" />
+                    <text x="950" y="33" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" font-weight="600" fill="#16a34a">LIVE</text>
+                    <text x="980" y="33" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.4)">Syncing from 3 service</text>
+                    <!-- Ads button -->
+                    <rect x="1188" y="16" width="52" height="26" rx="8" fill="#1e2a3a" stroke="rgba(255,255,255,.15)"
+                        stroke-width="1" />
+                    <text x="1214" y="33" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.7)" text-anchor="middle">Ads</text>
+                    <!-- Arrow -->
+                    <path d="M1252 26 L1258 29 L1252 32" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="1.5"
+                        stroke-linecap="round" stroke-linejoin="round" />
+
+                    <!-- ═══════════════════════════════════════════
+       KPI CARDS ROW   y=54  h=110
+       4 cards, content width=1080 (260→1340), each w=262 gap=12
+       Card x: 260, 534, 808, 1082
+  ═══════════════════════════════════════════ -->
+
+                    <!-- Card 1: 2,847,203 Total Verifications -->
+                    <rect x="260" y="54" width="262" height="110" rx="12" fill="#1e2a3a" />
+                    <text x="284" y="107" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="40" font-weight="700" fill="#fff" letter-spacing="-1">2,847,203</text>
+                    <text x="284" y="132" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.45)">Total Verifications</text>
+
+                    <!-- Card 2: 14,892 Active Users -->
+                    <rect x="534" y="54" width="262" height="110" rx="12" fill="#1e2a3a" />
+                    <text x="558" y="107" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="40" font-weight="700" fill="#fff" letter-spacing="-1">14,892</text>
+                    <text x="558" y="132" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.45)">Active Users</text>
+
+                    <!-- Card 3: 12 Platforms -->
+                    <rect x="808" y="54" width="262" height="110" rx="12" fill="#1e2a3a" />
+                    <text x="832" y="107" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="40" font-weight="700" fill="#fff" letter-spacing="-1">12</text>
+                    <text x="832" y="132" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.45)">Platforms</text>
+
+                    <!-- Card 4: 23 Active Sessions -->
+                    <rect x="1082" y="54" width="250" height="110" rx="12" fill="#1e2a3a" />
+                    <text x="1106" y="107" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="40" font-weight="700" fill="#fff" letter-spacing="-1">23</text>
+                    <text x="1106" y="132" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.45)">Active Sessions</text>
+
+                    <!-- ═══════════════════════════════════════════
+       MIDDLE ROW: Live Verifications + Platform Health
+       y=180  h=450
+       Left panel: x=260 w=440
+       Right panel: x=712 w=620
+  ═══════════════════════════════════════════ -->
+
+                    <!-- ── LEFT: Live Verifications ── -->
+                    <rect x="260" y="180" width="440" height="450" rx="12" fill="#1e2a3a" />
+                    <!-- Panel header -->
+                    <text x="284" y="218" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="17" font-weight="700" fill="#fff">Live Verifications</text>
+                    <!-- Live dot -->
+                    <circle cx="558" cy="214" r="4" fill="#16a34a" />
+                    <circle cx="558" cy="214" r="7" fill="#16a34a" opacity=".15" />
+                    <text x="568" y="219" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="600" fill="#16a34a">LIVE</text>
+
+                    <!-- Divider -->
+                    <rect x="260" y="232" width="440" height="1" fill="rgba(255,255,255,.07)" />
+
+                    <!-- Verification rows — each h=66, start y=240 -->
+                    <!-- ROW ANATOMY: avatar circle (r=20) | name bold / platform·time | status chip right -->
+                    <!-- Avatar circles: cx=302, text cx=302. Name x=336. Chip right edge x=688 -->
+
+                    <!-- Row 1: Adebisi Obasanjo — Success  y=240 cy=273 -->
+                    <circle cx="302" cy="273" r="20" fill="url(#av_ad)" />
+                    <text x="302" y="277" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="700" fill="#fff" text-anchor="middle">AD</text>
+                    <text x="336" y="266" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="14" font-weight="600" fill="#fff">Adebisi Obasanjo</text>
+                    <text x="336" y="283" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.42)">Netflix · 3 min ago</text>
+                    <rect x="612" y="260" width="74" height="26" rx="6" fill="none" stroke="#16a34a"
+                        stroke-width="1.5" />
+                    <text x="649" y="277" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="600" fill="#16a34a" text-anchor="middle">Success</text>
+                    <rect x="260" y="306" width="440" height="1" fill="rgba(255,255,255,.05)" />
+
+                    <!-- Row 2: Chukwuemeka Eric — Success  cy=339 -->
+                    <circle cx="302" cy="339" r="20" fill="url(#av_ce)" />
+                    <text x="302" y="343" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="700" fill="#fff" text-anchor="middle">CE</text>
+                    <text x="336" y="332" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="14" font-weight="600" fill="#fff">Chukwuemeka Eric</text>
+                    <text x="336" y="349" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.42)">HBO Max · 5 min ago</text>
+                    <rect x="612" y="326" width="74" height="26" rx="6" fill="none" stroke="#16a34a"
+                        stroke-width="1.5" />
+                    <text x="649" y="343" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="600" fill="#16a34a" text-anchor="middle">Success</text>
+                    <rect x="260" y="372" width="440" height="1" fill="rgba(255,255,255,.05)" />
+
+                    <!-- Row 3: Foluwashola M. Olayiwola — Pending  cy=405 -->
+                    <circle cx="302" cy="405" r="20" fill="url(#av_eh)" />
+                    <text x="302" y="409" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="700" fill="#fff" text-anchor="middle">EH</text>
+                    <text x="336" y="398" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="14" font-weight="600" fill="#fff">Foluwashola M. Olayiwola</text>
+                    <text x="336" y="415" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.42)">Amazon Prime · 8 min ago</text>
+                    <rect x="608" y="392" width="78" height="26" rx="6" fill="none" stroke="#f59e0b"
+                        stroke-width="1.5" />
+                    <text x="647" y="409" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="600" fill="#f59e0b" text-anchor="middle">Pending</text>
+                    <rect x="260" y="438" width="440" height="1" fill="rgba(255,255,255,.05)" />
+
+                    <!-- Row 4: Olayemisi Akinbuwa — Success  cy=471 -->
+                    <circle cx="302" cy="471" r="20" fill="url(#av_oa)" />
+                    <text x="302" y="475" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="700" fill="#fff" text-anchor="middle">OA</text>
+                    <text x="336" y="464" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="14" font-weight="600" fill="#fff">Olayemisi Akinbuwa</text>
+                    <text x="336" y="481" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.42)">YouTube Premium · 11 min ago</text>
+                    <rect x="612" y="458" width="74" height="26" rx="6" fill="none" stroke="#16a34a"
+                        stroke-width="1.5" />
+                    <text x="649" y="475" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="600" fill="#16a34a" text-anchor="middle">Success</text>
+                    <rect x="260" y="504" width="440" height="1" fill="rgba(255,255,255,.05)" />
+
+                    <!-- Row 5: Unknown — HNS Unusually — Failed  cy=537 -->
+                    <circle cx="302" cy="537" r="20" fill="url(#av_uh)" />
+                    <text x="302" y="541" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="700" fill="#fff" text-anchor="middle">UH</text>
+                    <text x="336" y="530" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="14" font-weight="600" fill="#fff">Unknown — HNS Unusually</text>
+                    <text x="336" y="547" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.42)">Disney+ · 14 min ago</text>
+                    <rect x="616" y="524" width="64" height="26" rx="6" fill="#dc2626" />
+                    <text x="648" y="541" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="600" fill="#fff" text-anchor="middle">Failed</text>
+                    <rect x="260" y="570" width="440" height="1" fill="rgba(255,255,255,.05)" />
+
+                    <!-- Row 6: Taiwo Keji — Success  cy=603 -->
+                    <circle cx="302" cy="603" r="20" fill="url(#av_tk)" />
+                    <text x="302" y="607" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="700" fill="#fff" text-anchor="middle">TK</text>
+                    <text x="336" y="596" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="14" font-weight="600" fill="#fff">Taiwo Keji</text>
+                    <text x="336" y="613" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.42)">Spotify · 18 min ago</text>
+                    <rect x="612" y="590" width="74" height="26" rx="6" fill="none" stroke="#16a34a"
+                        stroke-width="1.5" />
+                    <text x="649" y="607" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="600" fill="#16a34a" text-anchor="middle">Success</text>
+
+                    <!-- +4 more verifications -->
+                    <text x="480" y="648" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.4)" text-anchor="middle">+4 more verifications</text>
+
+                    <!-- ── RIGHT: Platform Health ── -->
+                    <rect x="712" y="180" width="620" height="450" rx="12" fill="#1e2a3a" />
+                    <text x="736" y="218" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="17" font-weight="700" fill="#fff">Platform Health</text>
+                    <text x="1308" y="218" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.38)" text-anchor="end">Real-time</text>
+                    <rect x="712" y="232" width="620" height="1" fill="rgba(255,255,255,.07)" />
+
+                    <!-- Platform health rows: label left, bar full-width, % right, type far right -->
+                    <!-- Bar track: x=736 w=430, right edge=1166 → % at 1176, type at 1308 -->
+                    <!-- Row structure: cy=row_start+22 for dot+name, bar at cy+16 h=6 -->
+                    <!-- Each row occupies 56px: name+dot cy=row_y+20, bar at row_y+34 h=6, type at row_y+20 -->
+
+                    <!-- Row 1: Netflix Enabled — GREEN 99%  y=244 -->
+                    <circle cx="747" cy="264" r="5" fill="#16a34a" />
+                    <text x="760" y="268" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.85)">Netflix Enabled</text>
+                    <text x="1176" y="268" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" font-weight="700" fill="#16a34a" text-anchor="end">99%</text>
+                    <text x="1308" y="268" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="11" fill="rgba(255,255,255,.3)" text-anchor="end">24.9 SLSM</text>
+                    <rect x="736" y="276" width="434" height="7" rx="3.5" fill="rgba(255,255,255,.1)" />
+                    <rect x="736" y="276" width="430" height="7" rx="3.5" fill="#16a34a" />
+
+                    <!-- Row 2: Disney+ Enabled — GREEN 98%  y=300 -->
+                    <circle cx="747" cy="318" r="5" fill="#16a34a" />
+                    <text x="760" y="322" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.85)">Disney+ Enabled</text>
+                    <text x="1176" y="322" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" font-weight="700" fill="#16a34a" text-anchor="end">98%</text>
+                    <text x="1308" y="322" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="11" fill="rgba(255,255,255,.3)" text-anchor="end">23.4 SLSM</text>
+                    <rect x="736" y="330" width="434" height="7" rx="3.5" fill="rgba(255,255,255,.1)" />
+                    <rect x="736" y="330" width="425" height="7" rx="3.5" fill="#16a34a" />
+
+                    <!-- Row 3: Peacock Education — BLUE 94%  y=356 -->
+                    <circle cx="747" cy="374" r="5" fill="#3b82f6" />
+                    <text x="760" y="378" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.82)">Peacock Education</text>
+                    <text x="1176" y="378" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" font-weight="700" fill="#3b82f6" text-anchor="end">94%</text>
+                    <text x="1308" y="378" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="11" fill="rgba(255,255,255,.3)" text-anchor="end">19.4 SLSM</text>
+                    <rect x="736" y="386" width="434" height="7" rx="3.5" fill="rgba(255,255,255,.1)" />
+                    <rect x="736" y="386" width="408" height="7" rx="3.5" fill="#3b82f6" />
+
+                    <!-- Row 4: Microsoft 365 — AMBER 88%  y=412 -->
+                    <circle cx="747" cy="430" r="5" fill="#f59e0b" />
+                    <text x="760" y="434" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.78)">Microsoft 365</text>
+                    <text x="1176" y="434" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" font-weight="700" fill="#f59e0b" text-anchor="end">88%</text>
+                    <text x="1308" y="434" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="11" fill="rgba(255,255,255,.3)" text-anchor="end">Base</text>
+                    <rect x="736" y="442" width="434" height="7" rx="3.5" fill="rgba(255,255,255,.1)" />
+                    <rect x="736" y="442" width="382" height="7" rx="3.5" fill="#f59e0b" />
+
+                    <!-- Row 5: Google Workspace — AMBER 75%  y=468 -->
+                    <circle cx="747" cy="486" r="5" fill="#f59e0b" />
+                    <text x="760" y="490" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.75)">Google Workspace</text>
+                    <text x="1176" y="490" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" font-weight="700" fill="#f59e0b" text-anchor="end">75%</text>
+                    <text x="1308" y="490" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="11" fill="rgba(255,255,255,.3)" text-anchor="end">Base</text>
+                    <rect x="736" y="498" width="434" height="7" rx="3.5" fill="rgba(255,255,255,.1)" />
+                    <rect x="736" y="498" width="326" height="7" rx="3.5" fill="#f59e0b" />
+
+                    <!-- Row 6: Slack — AMBER 65%  y=524 -->
+                    <circle cx="747" cy="542" r="5" fill="#f59e0b" />
+                    <text x="760" y="546" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.72)">Slack</text>
+                    <text x="1176" y="546" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" font-weight="700" fill="#f59e0b" text-anchor="end">65%</text>
+                    <text x="1308" y="546" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="11" fill="rgba(255,255,255,.3)" text-anchor="end">Add-on</text>
+                    <rect x="736" y="554" width="434" height="7" rx="3.5" fill="rgba(255,255,255,.1)" />
+                    <rect x="736" y="554" width="282" height="7" rx="3.5" fill="#f59e0b" />
+
+                    <!-- Row 7: Zoom — AMBER 80%  y=580 -->
+                    <circle cx="747" cy="598" r="5" fill="#f59e0b" />
+                    <text x="760" y="602" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.72)">Zoom</text>
+                    <text x="1176" y="602" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" font-weight="700" fill="#f59e0b" text-anchor="end">80%</text>
+                    <text x="1308" y="602" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="11" fill="rgba(255,255,255,.3)" text-anchor="end">Base</text>
+                    <rect x="736" y="610" width="434" height="7" rx="3.5" fill="rgba(255,255,255,.1)" />
+                    <rect x="736" y="610" width="347" height="7" rx="3.5" fill="#f59e0b" />
+
+                    <!-- ═══════════════════════════════════════════
+       SYSTEM HEALTH BOTTOM PANEL   y=648  h=238
+  ═══════════════════════════════════════════ -->
+                    <rect x="260" y="648" width="1072" height="238" rx="12" fill="#1e2a3a" />
+
+                    <!-- Panel header -->
+                    <!-- Heartbeat icon (simplified ECG line) -->
+                    <polyline points="274,680 282,680 285,672 290,690 295,668 300,680 308,680" fill="none"
+                        stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <text x="318" y="684" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="17" font-weight="700" fill="#fff">System Health</text>
+                    <text x="1308" y="684" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.35)" text-anchor="end">Last 7 days</text>
+                    <rect x="260" y="696" width="1072" height="1" fill="rgba(255,255,255,.07)" />
+
+                    <!-- Four metrics + sparklines, then Top Platforms column -->
+                    <!-- Metric columns: x=284,484,684,884  each occupying ~180px -->
+
+                    <!-- Metric 1: 2.8M+ Total Verifications -->
+                    <text x="284" y="750" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="32" font-weight="700" fill="#fff" letter-spacing="-0.5">2.8M+</text>
+                    <text x="284" y="774" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.42)">Total Verifications</text>
+                    <text x="284" y="796" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="600" fill="#16a34a">+12.5% vs last week</text>
+                    <!-- Sparkline green: flat then rises -->
+                    <path d="M284,840 Q310,845 330,838 Q350,831 370,836 Q390,841 410,832 Q430,823 450,828" fill="none"
+                        stroke="#16a34a" stroke-width="2" stroke-linecap="round" />
+
+                    <!-- Metric 2: 0.4s Avg Response Time -->
+                    <text x="484" y="750" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="32" font-weight="700" fill="#fff" letter-spacing="-0.5">0.4s</text>
+                    <text x="484" y="774" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.42)">Avg Response Time</text>
+                    <!-- Sparkline green wavy: stable around low -->
+                    <path d="M484,840 Q504,836 524,840 Q544,844 564,838 Q584,832 604,836 Q624,840 644,834" fill="none"
+                        stroke="#16a34a" stroke-width="2" stroke-linecap="round" />
+
+                    <!-- Metric 3: 23 Active APIs -->
+                    <text x="684" y="750" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="32" font-weight="700" fill="#fff" letter-spacing="-0.5">23</text>
+                    <text x="684" y="774" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.42)">Active APIs</text>
+                    <!-- Sparkline amber wavy -->
+                    <path d="M684,840 Q704,836 724,842 Q744,848 764,840 Q784,832 804,838 Q824,844 844,836" fill="none"
+                        stroke="#f59e0b" stroke-width="2" stroke-linecap="round" />
+
+                    <!-- Metric 4: 148 API Calls/sec -->
+                    <text x="884" y="750" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="32" font-weight="700" fill="#fff" letter-spacing="-0.5">148</text>
+                    <text x="884" y="774" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" fill="rgba(255,255,255,.42)">API Calls/sec</text>
+                    <text x="884" y="796" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="600" fill="#dc2626">-1.8% loss</text>
+
+                    <!-- Top Platforms column: x=1080 -->
+                    <text x="1080" y="720" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="12" font-weight="600" fill="rgba(255,255,255,.42)">Top Platforms</text>
+                    <!-- Call of Duty -->
+                    <text x="1080" y="744" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.7)">Call of Duty</text>
+                    <text x="1308" y="744" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.55)" text-anchor="end">58k</text>
+                    <!-- HBO Max -->
+                    <text x="1080" y="768" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.65)">HBO Max</text>
+                    <text x="1308" y="768" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.5)" text-anchor="end">32k</text>
+                    <!-- FIFA -->
+                    <text x="1080" y="792" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.6)">FIFA</text>
+                    <text x="1308" y="792" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+                        font-size="13" fill="rgba(255,255,255,.45)" text-anchor="end">24k</text>
+                </svg>
+
+            </div>
+
+            <div class="admin-caps reveal d2">
+                <div class="admin-cap-box">
+                    <h4>Sidebar faithful to the product</h4>
+                    <p>The sidebar navigation, logo placement, user profile card, and welcome greeting all match the
+                        actual BIMS desktop product from the reference image. The dark version adapts the same
+                        structural logic — icon + label, active state with a green left border, support link at the
+                        bottom, user profile at the very base — maintaining visual continuity with the real product.</p>
+                </div>
+                <div class="admin-cap-box">
+                    <h4>World map as the centrepiece</h4>
+                    <p>The second reference image shows a login-activity map as the dashboard's primary content element
+                        — demonstrating geographic spread as a trust signal. The BIMS dashboard uses the same principle:
+                        Nigeria as the hub, connection arcs to Europe, North America, and Asia, with real-time event
+                        stream on the left and system health on the right — a layout that reads as operational
+                        infrastructure, not a finance report.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ═══════════════ API INTEGRATION ═══════════════ -->
+    <section id="api">
+        <div class="container">
+            <div class="api-grid">
+                <div class="reveal">
+                    <span class="section-label">Platform Integration</span>
+                    <h2>The API layer that makes BIMS infrastructure</h2>
+                    <p class="body-text">
+                        The B2B side of BIMS is as important as the student-facing app. For platforms like Netflix or
+                        Spotify, integrating BIMS means replacing a broken, fraud-prone self-declaration system with a
+                        real-time verified API call that takes under a second.
+                    </p>
+                    <p class="body-text">
+                        The design of the API layer — its documentation, onboarding, and dashboard — was treated with
+                        the same care as the consumer app. <strong>A developer who couldn't integrate in under an hour
+                            wasn't acceptable.</strong>
+                    </p>
+                    <div class="platform-logos">
+                        <div class="plat-pill"><span>🎬</span> Netflix</div>
+                        <div class="plat-pill"><span>🎵</span> Spotify</div>
+                        <div class="plat-pill"><span>🎨</span> Canva</div>
+                        <div class="plat-pill"><span>🔍</span> Google</div>
+                        <div class="plat-pill"><span>☁️</span> Microsoft</div>
+                        <div class="plat-pill"><span>🎓</span> Coursera</div>
+                        <div class="plat-pill"
+                            style="background:var(--warm-mid);color:var(--muted);border-style:dashed">+ 6 more</div>
+                    </div>
+                </div>
+                <div class="reveal d2">
+                    <span class="section-label" style="color:var(--muted)">Integration flow</span>
+                    <h2 style="font-size:clamp(1.3rem,2vw,1.7rem);margin-bottom:1rem">How a platform integrates in 4
+                        steps</h2>
+                    <div class="api-flow">
+                        <div class="api-step">
+                            <div class="api-step-num">1</div>
+                            <div class="api-step-body">
+                                <strong>Platform registers via BIMS Developer Portal</strong>
+                                <p>Platform submits OAuth credentials and selects verification scope (enrollment status,
+                                    institution, graduation year). Reviewed and approved within 24h.</p>
+                                <span class="api-step-badge badge-post">POST /integrations/register</span>
+                            </div>
+                        </div>
+                        <div class="api-step">
+                            <div class="api-step-num">2</div>
+                            <div class="api-step-body">
+                                <strong>Student initiates discount claim on platform</strong>
+                                <p>Platform redirects student to BIMS OAuth consent screen. Student approves the data
+                                    share (enrollment status only — no NIN shared with platform).</p>
+                                <span class="api-step-badge badge-get">GET /oauth/authorise</span>
+                            </div>
+                        </div>
+                        <div class="api-step">
+                            <div class="api-step-num">3</div>
+                            <div class="api-step-body">
+                                <strong>BIMS returns real-time verification token</strong>
+                                <p>Platform receives a signed JWT containing: is_verified_student, institution_name,
+                                    enrollment_year, expiry_date. Response in under 0.4 seconds.</p>
+                                <span class="api-step-badge badge-get">GET /verify/{token}</span>
+                            </div>
+                        </div>
+                        <div class="api-step">
+                            <div class="api-step-num">4</div>
+                            <div class="api-step-body">
+                                <strong>Webhook fires on status change</strong>
+                                <p>When a student graduates, transfers, or is disenrolled, BIMS automatically notifies
+                                    connected platforms via webhook — no manual re-verification required.</p>
+                                <span class="api-step-badge badge-webhook">WEBHOOK student.status_changed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ DESIGN DECISIONS ═══════════════ -->
+    <section id="decisions">
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">Design Decisions</span>
+                <h2>Where the real design thinking happened</h2>
+            </div>
+            <div class="dec-grid">
+                <div class="dec-card reveal d1">
+                    <div class="dec-icon">🛡</div>
+                    <h3 class="dec-title">Trust before ask — NIN context block</h3>
+                    <p class="dec-body">Placing "Why we need your NIN" directly above the input field — not in a
+                        separate FAQ or privacy policy — was a deliberate trust design decision. Users who understand
+                        the data purpose before entering it are 40% less likely to abandon the flow at the NIN step
+                        compared to those shown a legal disclaimer only.</p>
+                </div>
+                <div class="dec-card reveal d2">
+                    <div class="dec-icon">🪪</div>
+                    <h3 class="dec-title">No placeholder photo — a business rule as design principle</h3>
+                    <p class="dec-body">The FRD specified: where a profile photo is absent, show nothing — not even a
+                        placeholder. This rule was designed to prevent spoofing (a generic silhouette creates a false
+                        sense of completeness). The card design accounts for this gracefully — layout reflows to fill
+                        the space without creating visual holes.</p>
+                </div>
+                <div class="dec-card reveal d3">
+                    <div class="dec-icon">🔄</div>
+                    <h3 class="dec-title">Flip interaction for the ID card</h3>
+                    <p class="dec-body">Physical student ID cards have a front and back. The digital version needed to
+                        feel like one. Tapping the card triggers a 3D CSS flip — not a modal, not a tab. This mirrors
+                        the physical affordance and signals to platforms scanning the QR that they're dealing with a
+                        genuine credential, not a screenshot.</p>
+                </div>
+                <div class="dec-card reveal d1">
+                    <div class="dec-icon">📱</div>
+                    <h3 class="dec-title">My Apps as a retention mechanism</h3>
+                    <p class="dec-body">Students who only use BIMS to verify once and never return create a fragile
+                        identity layer. My Apps converts BIMS into a daily touchpoint — students check subscription
+                        status, add new platforms, and see their verified identity working across services. DAU among My
+                        Apps users is 6× higher than non-users.</p>
+                </div>
+                <div class="dec-card reveal d2">
+                    <div class="dec-icon">⚡</div>
+                    <h3 class="dec-title">Free Data as an activation lever</h3>
+                    <p class="dec-body">Free mobile data access was positioned as a prominent Quick Action on the
+                        dashboard — not buried in settings. Students who activate free data are 3× more likely to
+                        complete NIN verification within the same session. The feature is eligibility-gated, but the
+                        visibility creates urgency to complete onboarding.</p>
+                </div>
+                <div class="dec-card reveal d3">
+                    <div class="dec-icon">🔌</div>
+                    <h3 class="dec-title">OAuth for privacy — NIN never leaves BIMS</h3>
+                    <p class="dec-body">The critical API design decision: platforms never receive a student's NIN, only
+                        a signed verification token. This was both a privacy requirement and a trust-building design
+                        choice — students who understand their NIN stays inside BIMS are more willing to provide it. The
+                        consent screen explicitly states "Netflix will receive: enrollment status only."</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ OUTCOMES ═══════════════ -->
+    <section id="outcomes">
+        <div class="outcomes-inner">
+            <div class="outcomes-grid">
+                <div class="reveal">
+                    <span class="section-label light">Results</span>
+                    <h2 style="color:#fff">What it means when identity infrastructure works</h2>
+                    <p
+                        style="font-size:.95rem;color:var(--b-muted);line-height:1.85;font-weight:300;margin-bottom:1.25rem">
+                        BIMS launched as a mobile app and admin platform, but it quickly became clear that the real
+                        value was the infrastructure layer. Within the first 90 days, 12 platforms had integrated.
+                        Within six months, over 2.8 million verification calls had been processed — with a fraud flag
+                        rate of 0.08%, compared to an estimated 12–18% under the prior email-domain system.
+                    </p>
+                    <p
+                        style="font-size:.95rem;color:var(--b-muted);line-height:1.85;font-weight:300;margin-bottom:1.25rem">
+                        For students, the experience shift was tangible. <strong style="color:#fff">Verify once, access
+                            everywhere</strong> went from a marketing line to a lived experience — students who had
+                        previously spent 20–30 minutes uploading ID photos to individual platforms were now verified in
+                        under 8 seconds.
+                    </p>
+                    <div class="outcome-stat-grid">
+                        <div class="ostat">
+                            <div class="ostat-num">2.8M+</div>
+                            <div class="ostat-label">Verifications in first 6 months</div>
+                        </div>
+                        <div class="ostat">
+                            <div class="ostat-num">0.08%</div>
+                            <div class="ostat-label">Fraud rate vs ~15% prior</div>
+                        </div>
+                        <div class="ostat">
+                            <div class="ostat-num">8 sec</div>
+                            <div class="ostat-label">Average student verification time</div>
+                        </div>
+                        <div class="ostat">
+                            <div class="ostat-num">12</div>
+                            <div class="ostat-label">Platforms live at 90 days</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal d2">
+                    <span class="section-label light" style="color:var(--b-muted)">What I'd do differently</span>
+                    <h2 style="font-size:clamp(1.3rem,2vw,1.65rem);margin-bottom:1.5rem;color:#fff">Honest reflections
+                    </h2>
+                    <ul class="retro-list">
+                        <li>
+                            <strong>Design the developer portal as a first-class product</strong>
+                            The API integration flow was designed at the level of a user story, not a full product
+                            experience. Platform developers integrating BIMS deserve the same design care as students —
+                            an onboarding walkthrough, sandbox testing environment, and real-time webhook inspector.
+                            This was scoped out and I'd advocate harder to include it.
+                        </li>
+                        <li>
+                            <strong>Offline-resilient digital ID</strong>
+                            The digital ID card requires an active internet connection to display. In a country where
+                            connectivity is intermittent, a cached offline version of the verified ID is essential —
+                            particularly for students presenting it at physical checkpoints. This should have been a
+                            launch requirement, not a roadmap item.
+                        </li>
+                        <li>
+                            <strong>Accessibility for the 6-digit PIN</strong>
+                            The PIN screen was designed for sighted users with standard motor control. Visually impaired
+                            students using screen readers experience significant friction on the custom numpad. A native
+                            OS keyboard fallback with proper ARIA labels should have been included from the start.
+                        </li>
+                        <li>
+                            <strong>Student offboarding — what happens on graduation</strong>
+                            Designing verification was well-scoped. Designing what happens when a student graduates —
+                            whether and how their BIMS ID persists, what platform access continues, how alumni status is
+                            handled — was left ambiguous. The webhook for <code
+                                style="font-family:monospace;font-size:.75rem;background:rgba(255,255,255,.08);padding:.1rem .4rem;border-radius:3px">student.status_changed</code>
+                            exists, but the student-facing experience of that transition was never designed.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <div class="case-footer">
+        <p class="footer-nav-label">Back to portfolio</p>
+        <a href="home.html" class="back-btn">← All Projects</a>
+    </div>
+
+    <!-- PAGE TRANSITION -->
+    <div id="pageOverlay"><span>Leye Oladipo</span></div>
+
+    <script>
+        // Scroll reveal
+        const els = document.querySelectorAll('.reveal');
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+        els.forEach(el => obs.observe(el));
+
+        // Exit transition
+        document.querySelectorAll('a[href$=".html"], .back-btn').forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href || href === '#') return;
+                e.preventDefault();
+                const overlay = document.getElementById('pageOverlay');
+                overlay.style.transition = 'none';
+                overlay.style.transform = 'translateY(-100%)';
+                overlay.style.pointerEvents = 'all';
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        overlay.style.transition = 'transform .55s cubic-bezier(0.76,0,0.24,1)';
+                        overlay.style.transform = 'translateY(0%)';
+                        setTimeout(() => { window.location.href = href; }, 580);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

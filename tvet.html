@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TVET Portal — Case Study · Leye Oladipo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --ink: #0e0e0d;
+            --paper: #f5f3ee;
+            --warm-mid: #e8e3d8;
+            --accent: #1a3a2a;
+            --accent-lt: #2d6647;
+            --gold: #c9a84c;
+            --muted: #7a7670;
+            --border: rgba(14, 14, 13, 0.10);
+            --f-display: 'Fraunces', Georgia, serif;
+            --f-body: 'DM Sans', sans-serif;
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            background: var(--paper);
+            color: var(--ink);
+            font-family: var(--f-body);
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: .4
+        }
+
+        /* Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .7s var(--ease-out), transform .7s var(--ease-out)
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: none
+        }
+
+        .d1 {
+            transition-delay: .1s
+        }
+
+        .d2 {
+            transition-delay: .2s
+        }
+
+        .d3 {
+            transition-delay: .3s
+        }
+
+        .d4 {
+            transition-delay: .4s
+        }
+
+        .d5 {
+            transition-delay: .5s
+        }
+
+        /* Nav */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 5vw;
+            background: rgba(245, 243, 238, .9);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border)
+        }
+
+        .logo {
+            font-family: var(--f-display);
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: var(--ink);
+            text-decoration: none
+        }
+
+        .logo span {
+            color: var(--accent-lt)
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            font-size: .82rem;
+            font-weight: 400;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color .2s
+        }
+
+        .nav-back:hover {
+            color: var(--ink)
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem
+        }
+
+        .nav-cta {
+            background: var(--accent);
+            color: #fff;
+            padding: .5rem 1.1rem;
+            border-radius: 6px;
+            font-size: .82rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background .2s
+        }
+
+        .nav-cta:hover {
+            background: var(--accent-lt)
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 5vw
+        }
+
+        section {
+            padding: 5.5rem 0
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: .72rem;
+            font-weight: 500;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: var(--accent-lt);
+            margin-bottom: 1.25rem
+        }
+
+        .section-label::before {
+            content: '';
+            display: block;
+            width: 22px;
+            height: 1.5px;
+            background: var(--gold)
+        }
+
+        /* Hero */
+        #hero {
+            padding: 5rem 0 4rem;
+            background: var(--ink);
+            color: #fff
+        }
+
+        .hero-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 5vw
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: .5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem
+        }
+
+        .htag {
+            font-size: .68rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            font-weight: 500;
+            padding: .3rem .75rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, .15);
+            color: rgba(255, 255, 255, .6)
+        }
+
+        .htag.gold {
+            background: rgba(201, 168, 76, .15);
+            border-color: rgba(201, 168, 76, .35);
+            color: var(--gold)
+        }
+
+        h1 {
+            font-family: var(--f-display);
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -.025em;
+            color: #fff;
+            margin-bottom: 1.5rem
+        }
+
+        h1 em {
+            font-style: italic;
+            color: var(--gold)
+        }
+
+        .hero-sub {
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, .55);
+            max-width: 620px;
+            line-height: 1.8;
+            font-weight: 300;
+            margin-bottom: 3rem
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap
+        }
+
+        .hero-meta-item label {
+            display: block;
+            font-size: .68rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .35);
+            margin-bottom: .3rem
+        }
+
+        .hero-meta-item span {
+            font-size: .9rem;
+            color: rgba(255, 255, 255, .75);
+            font-weight: 300
+        }
+
+        /* Metrics bar */
+        #metrics {
+            background: var(--accent);
+            padding: 3.5rem 0
+        }
+
+        .metrics-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 5vw;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(255, 255, 255, .1)
+        }
+
+        .metric {
+            background: var(--accent);
+            padding: 2rem 2rem;
+            position: relative
+        }
+
+        .metric-num {
+            font-family: var(--f-display);
+            font-size: 2.6rem;
+            font-weight: 300;
+            color: var(--gold);
+            line-height: 1;
+            margin-bottom: .4rem
+        }
+
+        .metric-label {
+            font-size: .8rem;
+            color: rgba(255, 255, 255, .55);
+            font-weight: 300;
+            line-height: 1.5
+        }
+
+        .metric-sub {
+            font-size: .72rem;
+            color: rgba(255, 255, 255, .3);
+            margin-top: .3rem
+        }
+
+        /* Problem */
+        #problem {
+            background: var(--paper)
+        }
+
+        .problem-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: start
+        }
+
+        h2 {
+            font-family: var(--f-display);
+            font-size: clamp(1.7rem, 3vw, 2.5rem);
+            font-weight: 400;
+            line-height: 1.2;
+            letter-spacing: -.02em;
+            margin-bottom: 1.5rem
+        }
+
+        .body-text {
+            font-size: .95rem;
+            color: var(--muted);
+            line-height: 1.85;
+            font-weight: 300;
+            margin-bottom: 1.25rem
+        }
+
+        .body-text strong {
+            color: var(--ink);
+            font-weight: 500
+        }
+
+        .pain-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: .85rem;
+            margin-top: 1.5rem
+        }
+
+        .pain-list li {
+            display: flex;
+            gap: .75rem;
+            font-size: .875rem;
+            color: #4a4844;
+            line-height: 1.65;
+            font-weight: 300
+        }
+
+        .pain-list li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--gold);
+            flex-shrink: 0;
+            margin-top: .55rem
+        }
+
+        /* Inherited list */
+        .inherited-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0
+        }
+
+        .inherited-item {
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: 1rem;
+            padding: 1.1rem 0;
+            border-bottom: 1px solid var(--border);
+            align-items: start
+        }
+
+        .inherited-marker {
+            font-family: var(--f-display);
+            font-size: .85rem;
+            font-weight: 300;
+            color: var(--gold);
+            opacity: .7;
+            line-height: 1.6;
+            padding-top: .05rem
+        }
+
+        .inherited-body strong {
+            display: block;
+            font-size: .9rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: .3rem;
+            line-height: 1.4
+        }
+
+        .inherited-body p {
+            font-size: .83rem;
+            color: var(--muted);
+            line-height: 1.7;
+            font-weight: 300;
+            margin: 0
+        }
+
+        /* Screen mockups */
+        .screen-section {
+            background: var(--ink);
+            padding: 5.5rem 0;
+            overflow: hidden
+        }
+
+        .screen-label {
+            display: block;
+            font-size: .7rem;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, .35);
+            margin-bottom: .75rem;
+            font-weight: 500
+        }
+
+        .screen-title {
+            font-family: var(--f-display);
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: .5rem;
+            letter-spacing: -.01em
+        }
+
+        .screen-desc {
+            font-size: .85rem;
+            color: rgba(255, 255, 255, .45);
+            font-weight: 300;
+            line-height: 1.7;
+            max-width: 480px
+        }
+
+        .screens-intro {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 5vw;
+            margin-bottom: 3.5rem
+        }
+
+        .screens-intro h2 {
+            color: #fff
+        }
+
+        /* Mockup containers */
+        .mockup-wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 5vw
+        }
+
+        .mockup-frame {
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, .5)
+        }
+
+        .mockup-topbar {
+            height: 38px;
+            background: #1a1a1a;
+            border-bottom: 1px solid rgba(255, 255, 255, .06);
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            gap: .5rem
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%
+        }
+
+        .dot-r {
+            background: #ff5f56
+        }
+
+        .dot-y {
+            background: #ffbd2e
+        }
+
+        .dot-g {
+            background: #27c93f
+        }
+
+        .mockup-body {
+            width: 100%
+        }
+
+        .side-by-side {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem
+        }
+
+        .caption-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 4rem
+        }
+
+        .caption-box {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .06);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem
+        }
+
+        .caption-box h4 {
+            font-family: var(--f-display);
+            font-size: 1rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: .4rem
+        }
+
+        .caption-box p {
+            font-size: .8rem;
+            color: rgba(255, 255, 255, .45);
+            font-weight: 300;
+            line-height: 1.65
+        }
+
+        /* Process */
+        #process {
+            background: var(--warm-mid)
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem
+        }
+
+        .process-step {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.75rem;
+            border: 1px solid var(--border);
+            position: relative
+        }
+
+        .step-num {
+            font-family: var(--f-display);
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: rgba(26, 58, 42, .12);
+            line-height: 1;
+            margin-bottom: 1rem
+        }
+
+        .step-title {
+            font-size: .95rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: .5rem
+        }
+
+        .step-desc {
+            font-size: .82rem;
+            color: var(--muted);
+            line-height: 1.7;
+            font-weight: 300
+        }
+
+        /* Design decisions */
+        #decisions {
+            background: var(--paper)
+        }
+
+        .decisions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem
+        }
+
+        .decision-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            background: #fff;
+            transition: transform .2s, box-shadow .2s
+        }
+
+        .decision-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 36px rgba(14, 14, 13, .08)
+        }
+
+        .decision-icon {
+            font-size: 1.5rem;
+            margin-bottom: 1rem
+        }
+
+        .decision-title {
+            font-size: .95rem;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: .5rem
+        }
+
+        .decision-body {
+            font-size: .82rem;
+            color: var(--muted);
+            line-height: 1.7;
+            font-weight: 300
+        }
+
+        /* Role flow */
+        #roleflow {
+            background: var(--ink);
+            padding: 5.5rem 0
+        }
+
+        .flow-header {
+            max-width: 1100px;
+            margin: 0 auto 3rem;
+            padding: 0 5vw
+        }
+
+        .flow-header h2 {
+            color: #fff
+        }
+
+        .flow-header .section-label {
+            color: var(--gold)
+        }
+
+        .flow-header .section-label::before {
+            background: var(--gold)
+        }
+
+        .flow-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 5vw;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem
+        }
+
+        .role-card {
+            background: rgba(255, 255, 255, .04);
+            border: 1px solid rgba(255, 255, 255, .08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: background .2s, border-color .2s
+        }
+
+        .role-card:hover {
+            background: rgba(201, 168, 76, .06);
+            border-color: rgba(201, 168, 76, .2)
+        }
+
+        .role-badge {
+            display: inline-block;
+            font-size: .65rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            font-weight: 500;
+            padding: .25rem .6rem;
+            border-radius: 4px;
+            background: rgba(201, 168, 76, .15);
+            color: var(--gold);
+            margin-bottom: .85rem
+        }
+
+        .role-name {
+            font-family: var(--f-display);
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: #fff;
+            margin-bottom: .5rem
+        }
+
+        .role-access {
+            font-size: .72rem;
+            color: rgba(255, 255, 255, .35);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin-bottom: 1rem
+        }
+
+        .role-perms {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: .4rem
+        }
+
+        .role-perms li {
+            font-size: .78rem;
+            color: rgba(255, 255, 255, .5);
+            display: flex;
+            gap: .5rem;
+            font-weight: 300
+        }
+
+        .role-perms li::before {
+            content: '↳';
+            color: rgba(201, 168, 76, .5);
+            flex-shrink: 0
+        }
+
+        /* Outcome */
+        #outcomes {
+            background: var(--paper)
+        }
+
+        .outcome-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start
+        }
+
+        .outcome-quote {
+            background: var(--ink);
+            color: #fff;
+            border-radius: 14px;
+            padding: 2.5rem;
+            margin-top: 2rem
+        }
+
+        .outcome-quote p {
+            font-family: var(--f-display);
+            font-size: 1.2rem;
+            font-weight: 300;
+            font-style: italic;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, .8);
+            margin-bottom: 1rem
+        }
+
+        .outcome-quote cite {
+            font-size: .75rem;
+            color: rgba(255, 255, 255, .35);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            font-style: normal
+        }
+
+        .learnings {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+            margin-top: 1.5rem
+        }
+
+        .learnings li {
+            padding: 1.1rem 1.25rem;
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            font-size: .875rem;
+            color: var(--muted);
+            line-height: 1.65;
+            font-weight: 300
+        }
+
+        .learnings li strong {
+            color: var(--ink);
+            display: block;
+            font-size: .88rem;
+            margin-bottom: .2rem
+        }
+
+        /* Footer nav */
+        .case-footer {
+            background: var(--warm-mid);
+            padding: 4rem 0;
+            text-align: center
+        }
+
+        .footer-label {
+            font-size: .75rem;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 1rem;
+            font-weight: 400
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: var(--accent);
+            color: #fff;
+            padding: .85rem 2rem;
+            border-radius: 8px;
+            font-size: .875rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background .2s, transform .15s
+        }
+
+        .back-btn:hover {
+            background: var(--accent-lt);
+            transform: translateY(-2px)
+        }
+
+        /* SVG dashboard styles */
+        .db-bg {
+            fill: #0f1923
+        }
+
+        .db-sidebar {
+            fill: #111d29
+        }
+
+        .db-card {
+            fill: #162031
+        }
+
+        .db-card-alt {
+            fill: #1a2840
+        }
+
+        .db-text-light {
+            fill: rgba(255, 255, 255, .8)
+        }
+
+        .db-text-muted {
+            fill: rgba(255, 255, 255, .4)
+        }
+
+        .db-text-tiny {
+            fill: rgba(255, 255, 255, .25)
+        }
+
+        .db-gold {
+            fill: #c9a84c
+        }
+
+        .db-green {
+            fill: #2d6647
+        }
+
+        .db-green-lt {
+            fill: #4ade80
+        }
+
+        .db-red {
+            fill: #f87171
+        }
+
+        .db-blue {
+            fill: #60a5fa
+        }
+
+        .db-border {
+            fill: none;
+            stroke: rgba(255, 255, 255, .07);
+            stroke-width: 1
+        }
+
+        .db-accent-line {
+            fill: none;
+            stroke: #c9a84c;
+            stroke-width: 2
+        }
+
+        .db-chart-line {
+            fill: none;
+            stroke: #4ade80;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round
+        }
+
+        .db-chart-line-2 {
+            fill: none;
+            stroke: #c9a84c;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 4 3
+        }
+
+        .db-area {
+            fill: url(#areaGrad);
+            opacity: .3
+        }
+
+        .db-badge-green {
+            fill: rgba(74, 222, 128, .12)
+        }
+
+        .db-badge-gold {
+            fill: rgba(201, 168, 76, .12)
+        }
+
+        .db-badge-red {
+            fill: rgba(248, 113, 113, .12)
+        }
+
+        .db-badge-blue {
+            fill: rgba(96, 165, 250, .12)
+        }
+
+        @media(max-width:900px) {
+
+            .problem-grid,
+            .outcome-grid,
+            .process-steps,
+            .decisions-grid,
+            .flow-grid {
+                grid-template-columns: 1fr
+            }
+
+            .side-by-side,
+            .caption-row {
+                grid-template-columns: 1fr
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            h1 {
+                font-size: 2.2rem
+            }
+        }
+
+        @media(max-width:640px) {
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .metric-num {
+                font-size: 2rem
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="home.html" class="logo">Leye <span>Oladipo</span></a>
+        <div class="nav-right">
+            <a href="home.html" class="nav-back">← All Projects</a>
+            <a href="https://drive.google.com/file/d/1CG_ijI_OMimyV2X2ZlpcgnHA4qot1PGC/view?usp=drive_link"
+                target="_blank" class="nav-cta">Download Resume</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+        <div class="hero-wrap">
+            <div class="hero-tags reveal">
+                <span class="htag gold">Fintech</span>
+                <span class="htag">Government</span>
+                <span class="htag">Enterprise</span>
+                <span class="htag">Multi-role System</span>
+                <span class="htag">Financial Governance</span>
+            </div>
+            <h1 class="reveal d1">A national platform for <em>financial disbursement</em><br />at institutional scale
+            </h1>
+            <p class="hero-sub reveal d2">
+                Designing the end-to-end product experience for Nigeria's TVET Portal — a financial governance system
+                that manages student wallet creation, multi-tier disbursement approvals, and real-time transaction
+                visibility across thousands of secondary school students nationwide.
+            </p>
+            <div class="hero-meta reveal d3">
+                <div class="hero-meta-item">
+                    <label>My Role</label>
+                    <span>Lead Product Designer</span>
+                </div>
+                <div class="hero-meta-item">
+                    <label>Scope</label>
+                    <span>End-to-end · Web Platform</span>
+                </div>
+                <div class="hero-meta-item">
+                    <label>Duration</label>
+                    <span>6 months</span>
+                </div>
+                <div class="hero-meta-item">
+                    <label>Stakeholders</label>
+                    <span>Government · Bank · Fintech</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- METRICS -->
+    <div id="metrics">
+        <div class="metrics-grid">
+            <div class="metric reveal">
+                <div class="metric-num">10,000+</div>
+                <div class="metric-label">Students onboarded with Zenith Bank digital wallets</div>
+                <div class="metric-sub">Across multiple states</div>
+            </div>
+            <div class="metric reveal d1">
+                <div class="metric-num">6</div>
+                <div class="metric-label">Distinct user roles designed with bespoke access scopes</div>
+                <div class="metric-sub">Super Admin → Student → Parent</div>
+            </div>
+            <div class="metric reveal d2">
+                <div class="metric-num">3-tier</div>
+                <div class="metric-label">Approval workflow replacing ad-hoc manual processes</div>
+                <div class="metric-sub">Initiate → Review → Approve</div>
+            </div>
+            <div class="metric reveal d3">
+                <div class="metric-num">4</div>
+                <div class="metric-label">System integrations unified inside one coherent interface</div>
+                <div class="metric-sub">Krystal · Zenith · SwiftLink · TVET</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROBLEM -->
+    <section id="problem">
+        <div class="container">
+            <div class="problem-grid">
+                <div class="reveal">
+                    <span class="section-label">The Problem</span>
+                    <h2>A disbursement process with no structure, no trail, no trust</h2>
+                    <p class="body-text">
+                        Nigeria's TVET programme funds secondary school students with recurring stipends — a direct
+                        intervention designed to reduce dropout rates by absorbing the cost of attending school. The
+                        intent was clear. The execution wasn't.
+                    </p>
+                    <p class="body-text">
+                        Before this platform existed, disbursement was handled through a patchwork of spreadsheets, bank
+                        intermediaries, and informal sign-off chains. <strong>Money moved without
+                            accountability.</strong> Students couldn't verify they'd been paid. Parents had no
+                        visibility. Administrators couldn't prove approvals had been obtained before funds were
+                        released.
+                    </p>
+                    <p class="body-text">
+                        The federal oversight body needed a system that could impose structure on a genuinely complex
+                        financial process — across multiple states, multiple schools, and thousands of student records —
+                        without requiring the users operating it to be technically sophisticated.
+                    </p>
+                </div>
+                <div class="reveal d2">
+                    <span class="section-label" style="color:var(--muted)">What we inherited</span>
+                    <h2 style="font-size:clamp(1.4rem,2.2vw,1.8rem);margin-bottom:1.75rem;letter-spacing:-.015em">Core
+                        constraints the design had to solve</h2>
+                    <div class="inherited-list">
+                        <div class="inherited-item">
+                            <div class="inherited-marker">01</div>
+                            <div class="inherited-body"><strong>No single source of truth</strong>
+                                <p>Student enrollment data lived simultaneously in spreadsheets, Krystal's system, and
+                                    school admin files — often contradicting each other at the point of disbursement.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="inherited-item">
+                            <div class="inherited-marker">02</div>
+                            <div class="inherited-body"><strong>Zero audit trail on disbursements</strong>
+                                <p>Funds could be approved verbally and released without documented sign-off at any
+                                    level. There was no system of record.</p>
+                            </div>
+                        </div>
+                        <div class="inherited-item">
+                            <div class="inherited-marker">03</div>
+                            <div class="inherited-body"><strong>Role confusion at every tier</strong>
+                                <p>TVET federal admins, school admins, and state officers had overlapping
+                                    responsibilities with no defined system boundary or permission model.</p>
+                            </div>
+                        </div>
+                        <div class="inherited-item">
+                            <div class="inherited-marker">04</div>
+                            <div class="inherited-body"><strong>Students entirely in the dark</strong>
+                                <p>Recipients had no way to verify whether a disbursement had been initiated, approved,
+                                    or credited to their account.</p>
+                            </div>
+                        </div>
+                        <div class="inherited-item">
+                            <div class="inherited-marker">05</div>
+                            <div class="inherited-body"><strong>Manual, disconnected wallet creation</strong>
+                                <p>Zenith Bank wallets were opened ad-hoc with no structured link between enrollment
+                                    data and banking infrastructure.</p>
+                            </div>
+                        </div>
+                        <div class="inherited-item" style="border-bottom:none;padding-bottom:0;margin-bottom:0">
+                            <div class="inherited-marker">06</div>
+                            <div class="inherited-body"><strong>No resubmission flow for rejections</strong>
+                                <p>Rejected disbursements fell into a void — initiators weren't notified of reasons or
+                                    given a formal path to correct and resubmit.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCREEN: SUPER ADMIN DASHBOARD -->
+    <div class="screen-section">
+        <div class="screens-intro">
+            <span class="section-label" style="color:var(--gold)">Screen 01</span>
+            <h2 style="color:#fff;margin-bottom:.5rem">Super Admin — System Dashboard</h2>
+            <p style="color:rgba(255,255,255,.45);font-size:.875rem;font-weight:300;max-width:580px;line-height:1.7">
+                The command centre. Designed for the federal oversight team to monitor system-wide health — wallet
+                creation status, disbursement pipeline, and cross-school performance — without drowning in granular
+                data.
+            </p>
+        </div>
+        <div class="mockup-wrap">
+            <div class="mockup-frame reveal">
+                <div class="mockup-topbar">
+                    <div class="dot dot-r"></div>
+                    <div class="dot dot-y"></div>
+                    <div class="dot dot-g"></div>
+                </div>
+                <div class="mockup-body">
+                    <!-- SUPER ADMIN DASHBOARD SVG -->
+                    <svg viewBox="0 0 1100 700" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <defs>
+                            <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#4ade80" stop-opacity=".4" />
+                                <stop offset="100%" stop-color="#4ade80" stop-opacity="0" />
+                            </linearGradient>
+                            <linearGradient id="sideGrad" x1="0" y1="0" x2="1" y2="0">
+                                <stop offset="0%" stop-color="#0d1620" />
+                                <stop offset="100%" stop-color="#111d29" />
+                            </linearGradient>
+                        </defs>
+                        <!-- BG -->
+                        <rect width="1100" height="700" class="db-bg" />
+                        <!-- Sidebar -->
+                        <rect width="210" height="700" fill="url(#sideGrad)" />
+                        <rect x="209" y="0" width="1" height="700" class="db-border" />
+                        <!-- Logo area -->
+                        <rect x="20" y="20" width="120" height="28" rx="4" fill="rgba(201,168,76,.12)" />
+                        <text x="32" y="38" font-family="Georgia,serif" font-size="11" fill="#c9a84c"
+                            font-weight="400">TVET Portal</text>
+                        <!-- Nav items -->
+                        <rect x="12" y="68" width="186" height="34" rx="6" fill="rgba(201,168,76,.1)" />
+                        <text x="36" y="90" font-family="sans-serif" font-size="11" fill="#c9a84c">⬡ Dashboard</text>
+                        <text x="36" y="126" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.4)">◎
+                            Students</text>
+                        <text x="36" y="158" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.4)">⊞
+                            Schools</text>
+                        <text x="36" y="190" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.4)">↑↓
+                            Disbursements</text>
+                        <text x="36" y="222" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.4)">☰ Audit
+                            Log</text>
+                        <text x="36" y="254" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.4)">⚙ User
+                            Management</text>
+                        <text x="36" y="286" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,.4)">◈
+                            Reports</text>
+                        <!-- User tag -->
+                        <rect x="12" y="655" width="186" height="34" rx="6" fill="rgba(255,255,255,.05)" />
+                        <circle cx="30" cy="672" r="9" fill="#2d6647" />
+                        <text x="44" y="676" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.7)">Super
+                            Admin</text>
+
+                        <!-- MAIN CONTENT -->
+                        <!-- Top bar -->
+                        <rect x="210" y="0" width="890" height="52" fill="#0d1620" />
+                        <rect x="210" y="51" width="890" height="1" fill="rgba(255,255,255,.06)" />
+                        <text x="232" y="32" font-family="Georgia,serif" font-size="15" fill="rgba(255,255,255,.8)"
+                            font-weight="400">System Overview</text>
+                        <text x="232" y="46" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.3)">Last
+                            synced: 2 minutes ago</text>
+                        <!-- Notification dot -->
+                        <circle cx="1060" cy="26" r="14" fill="rgba(255,255,255,.06)" />
+                        <text x="1055" y="30" font-family="sans-serif" font-size="12"
+                            fill="rgba(255,255,255,.5)">🔔</text>
+                        <circle cx="1068" cy="18" r="5" fill="#f87171" />
+
+                        <!-- STAT CARDS row 1 -->
+                        <!-- Card 1 -->
+                        <rect x="232" y="68" width="196" height="90" rx="8" class="db-card" />
+                        <text x="250" y="92" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.35)"
+                            letter-spacing="1">TOTAL STUDENTS</text>
+                        <text x="250" y="120" font-family="Georgia,serif" font-size="26" fill="#fff"
+                            font-weight="300">10,847</text>
+                        <rect x="250" y="133" width="38" height="14" rx="3" fill="rgba(74,222,128,.12)" />
+                        <text x="254" y="143" font-family="sans-serif" font-size="8" fill="#4ade80">↑ 12.4%</text>
+                        <text x="296" y="143" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)">vs last
+                            month</text>
+                        <!-- Card 2 -->
+                        <rect x="440" y="68" width="196" height="90" rx="8" class="db-card" />
+                        <text x="458" y="92" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.35)"
+                            letter-spacing="1">ACTIVE WALLETS</text>
+                        <text x="458" y="120" font-family="Georgia,serif" font-size="26" fill="#fff"
+                            font-weight="300">9,312</text>
+                        <rect x="458" y="133" width="48" height="14" rx="3" fill="rgba(96,165,250,.12)" />
+                        <text x="462" y="143" font-family="sans-serif" font-size="8" fill="#60a5fa">85.9% of
+                            total</text>
+                        <!-- Card 3 -->
+                        <rect x="648" y="68" width="196" height="90" rx="8" class="db-card" />
+                        <text x="666" y="92" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.35)"
+                            letter-spacing="1">DISBURSED (YTD)</text>
+                        <text x="666" y="120" font-family="Georgia,serif" font-size="24" fill="#fff"
+                            font-weight="300">₦482.6M</text>
+                        <rect x="666" y="133" width="38" height="14" rx="3" fill="rgba(74,222,128,.12)" />
+                        <text x="670" y="143" font-family="sans-serif" font-size="8" fill="#4ade80">↑ 8.1%</text>
+                        <!-- Card 4 -->
+                        <rect x="856" y="68" width="224" height="90" rx="8" class="db-card" />
+                        <text x="874" y="92" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.35)"
+                            letter-spacing="1">PENDING APPROVAL</text>
+                        <text x="874" y="120" font-family="Georgia,serif" font-size="26" fill="#fff"
+                            font-weight="300">7</text>
+                        <rect x="874" y="133" width="62" height="14" rx="3" fill="rgba(248,113,113,.12)" />
+                        <text x="878" y="143" font-family="sans-serif" font-size="8" fill="#f87171">Requires
+                            action</text>
+
+                        <!-- MAIN CHART -->
+                        <rect x="232" y="176" width="530" height="220" rx="10" class="db-card" />
+                        <text x="252" y="200" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.7)"
+                            font-weight="500">Disbursement Volume — 2025</text>
+                        <text x="252" y="214" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)">Monthly
+                            totals in ₦ millions</text>
+                        <!-- Grid lines -->
+                        <line x1="252" y1="360" x2="742" y2="360" stroke="rgba(255,255,255,.05)" stroke-width="1" />
+                        <line x1="252" y1="330" x2="742" y2="330" stroke="rgba(255,255,255,.05)" stroke-width="1" />
+                        <line x1="252" y1="300" x2="742" y2="300" stroke="rgba(255,255,255,.05)" stroke-width="1" />
+                        <line x1="252" y1="270" x2="742" y2="270" stroke="rgba(255,255,255,.05)" stroke-width="1" />
+                        <line x1="252" y1="240" x2="742" y2="240" stroke="rgba(255,255,255,.05)" stroke-width="1" />
+                        <!-- Y labels -->
+                        <text x="240" y="363" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.2)"
+                            text-anchor="end">0</text>
+                        <text x="240" y="333" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.2)"
+                            text-anchor="end">20</text>
+                        <text x="240" y="303" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.2)"
+                            text-anchor="end">40</text>
+                        <text x="240" y="273" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.2)"
+                            text-anchor="end">60</text>
+                        <text x="240" y="243" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.2)"
+                            text-anchor="end">80</text>
+                        <!-- Area fill -->
+                        <path
+                            d="M252,340 L312,320 L372,308 L432,290 L492,298 L552,268 L612,250 L672,242 L732,238 L742,238 L742,360 L252,360 Z"
+                            class="db-area" />
+                        <!-- Chart line -->
+                        <polyline points="252,340 312,320 372,308 432,290 492,298 552,268 612,250 672,242 732,238"
+                            class="db-chart-line" />
+                        <!-- Dots -->
+                        <circle cx="732" cy="238" r="4" fill="#4ade80" />
+                        <circle cx="552" cy="268" r="3" fill="#4ade80" opacity=".6" />
+                        <!-- X labels -->
+                        <text x="252" y="375" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.25)"
+                            text-anchor="middle">Jan</text>
+                        <text x="312" y="375" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.25)"
+                            text-anchor="middle">Feb</text>
+                        <text x="372" y="375" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.25)"
+                            text-anchor="middle">Mar</text>
+                        <text x="432" y="375" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.25)"
+                            text-anchor="middle">Apr</text>
+                        <text x="492" y="375" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.25)"
+                            text-anchor="middle">May</text>
+                        <text x="552" y="375" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.25)"
+                            text-anchor="middle">Jun</text>
+                        <text x="612" y="375" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.25)"
+                            text-anchor="middle">Jul</text>
+                        <text x="672" y="375" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.25)"
+                            text-anchor="middle">Aug</text>
+                        <text x="732" y="375" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.25)"
+                            text-anchor="middle">Sep</text>
+
+                        <!-- RIGHT PANEL: Wallet Status — tall card with proper layout -->
+                        <rect x="778" y="176" width="302" height="200" rx="10" class="db-card" />
+                        <text x="796" y="200" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.7)"
+                            font-weight="500">Wallet Status Breakdown</text>
+                        <line x1="796" y1="208" x2="1066" y2="208" stroke="rgba(255,255,255,.06)" stroke-width="1" />
+                        <!-- Donut — centred at 850, y=268 (so it has room top+bottom) -->
+                        <circle cx="850" cy="270" r="38" fill="none" stroke="#1e2d3e" stroke-width="18" />
+                        <circle cx="850" cy="270" r="38" fill="none" stroke="#2d6647" stroke-width="18"
+                            stroke-dasharray="150 89" stroke-dashoffset="37" transform="rotate(-90 850 270)" />
+                        <circle cx="850" cy="270" r="38" fill="none" stroke="#c9a84c" stroke-width="18"
+                            stroke-dasharray="36 203" stroke-dashoffset="-113" transform="rotate(-90 850 270)" />
+                        <circle cx="850" cy="270" r="38" fill="none" stroke="#f87171" stroke-width="18"
+                            stroke-dasharray="11 228" stroke-dashoffset="-149" transform="rotate(-90 850 270)" />
+                        <!-- Donut centre label -->
+                        <text x="850" y="265" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.5)"
+                            text-anchor="middle">Active</text>
+                        <text x="850" y="279" font-family="Georgia,serif" font-size="14" fill="#fff"
+                            text-anchor="middle">86%</text>
+                        <!-- Legend — right of donut, vertically centred -->
+                        <circle cx="914" cy="252" r="5" fill="#2d6647" />
+                        <text x="924" y="256" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.65)">Active</text>
+                        <text x="924" y="268" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.35)">9,312
+                            wallets</text>
+                        <circle cx="914" cy="284" r="5" fill="#c9a84c" />
+                        <text x="924" y="288" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.65)">Pending</text>
+                        <text x="924" y="300" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.35)">1,127
+                            wallets</text>
+                        <circle cx="914" cy="316" r="5" fill="#f87171" />
+                        <text x="924" y="320" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.65)">Failed</text>
+                        <text x="924" y="332" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.35)">408
+                            wallets</text>
+
+                        <!-- RIGHT PANEL: Disbursement Queue — pushed down to clear wallet card -->
+                        <rect x="778" y="390" width="302" height="122" rx="10" class="db-card" />
+                        <text x="796" y="412" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.7)"
+                            font-weight="500">Disbursement Queue</text>
+                        <line x1="796" y1="420" x2="1066" y2="420" stroke="rgba(255,255,255,.06)" stroke-width="1" />
+                        <!-- rows -->
+                        <rect x="796" y="427" width="266" height="22" rx="4" fill="rgba(255,255,255,.04)" />
+                        <text x="804" y="442" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.6)">October
+                            Stipend — Batch 4</text>
+                        <rect x="1010" y="430" width="48" height="15" rx="3" fill="rgba(201,168,76,.12)" />
+                        <text x="1034" y="441" font-family="sans-serif" font-size="7.5" fill="#c9a84c"
+                            text-anchor="middle">Reviewing</text>
+                        <text x="804" y="464" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.55)">November Stipend — All Schools</text>
+                        <rect x="1010" y="456" width="48" height="15" rx="3" fill="rgba(248,113,113,.12)" />
+                        <text x="1034" y="467" font-family="sans-serif" font-size="7.5" fill="#f87171"
+                            text-anchor="middle">Pending</text>
+                        <text x="804" y="486" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.35)">September Stipend — Lagos</text>
+                        <rect x="1010" y="479" width="48" height="15" rx="3" fill="rgba(74,222,128,.12)" />
+                        <text x="1034" y="490" font-family="sans-serif" font-size="7.5" fill="#4ade80"
+                            text-anchor="middle">Approved</text>
+
+                        <!-- LEFT LOWER: Quick Stats -->
+                        <rect x="232" y="412" width="530" height="96" rx="10" class="db-card" />
+                        <text x="252" y="434" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.7)"
+                            font-weight="500">Disbursement Success Rate</text>
+                        <line x1="252" y1="442" x2="742" y2="442" stroke="rgba(255,255,255,.06)" stroke-width="1" />
+                        <!-- mini stat pills -->
+                        <rect x="252" y="450" width="140" height="44" rx="7" fill="rgba(74,222,128,.07)"
+                            stroke="rgba(74,222,128,.15)" stroke-width="1" />
+                        <text x="322" y="469" font-family="Georgia,serif" font-size="16" fill="#4ade80"
+                            text-anchor="middle">97.2%</text>
+                        <text x="322" y="484" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.35)"
+                            text-anchor="middle">Delivery rate</text>
+                        <rect x="402" y="450" width="140" height="44" rx="7" fill="rgba(201,168,76,.07)"
+                            stroke="rgba(201,168,76,.15)" stroke-width="1" />
+                        <text x="472" y="469" font-family="Georgia,serif" font-size="16" fill="#c9a84c"
+                            text-anchor="middle">₦54.2M</text>
+                        <text x="472" y="484" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.35)"
+                            text-anchor="middle">Last batch value</text>
+                        <rect x="552" y="450" width="150" height="44" rx="7" fill="rgba(96,165,250,.07)"
+                            stroke="rgba(96,165,250,.15)" stroke-width="1" />
+                        <text x="627" y="469" font-family="Georgia,serif" font-size="16" fill="#60a5fa"
+                            text-anchor="middle">14 hrs</text>
+                        <text x="627" y="484" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.35)"
+                            text-anchor="middle">Avg approval time</text>
+
+                        <!-- BOTTOM TABLE -->
+                        <rect x="232" y="524" width="848" height="156" rx="10" class="db-card" />
+                        <text x="252" y="548" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.7)"
+                            font-weight="500">Recent Schools Activity</text>
+                        <rect x="252" y="559" width="808" height="1" fill="rgba(255,255,255,.07)" />
+                        <!-- Table header -->
+                        <text x="258" y="576" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)"
+                            letter-spacing=".5">SCHOOL NAME</text>
+                        <text x="480" y="576" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)"
+                            letter-spacing=".5">STUDENTS</text>
+                        <text x="580" y="576" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)"
+                            letter-spacing=".5">WALLETS ACTIVE</text>
+                        <text x="720" y="576" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)"
+                            letter-spacing=".5">LAST DISBURSEMENT</text>
+                        <text x="900" y="576" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)"
+                            letter-spacing=".5">STATUS</text>
+                        <rect x="252" y="580" width="808" height="1" fill="rgba(255,255,255,.05)" />
+                        <!-- Row 1 -->
+                        <rect x="252" y="583" width="808" height="26" rx="0" fill="rgba(255,255,255,.02)" />
+                        <text x="258" y="600" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.7)">Government Secondary School, Abuja</text>
+                        <text x="488" y="600" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.55)">842</text>
+                        <text x="588" y="600" font-family="sans-serif" font-size="9" fill="#4ade80">791 (93.9%)</text>
+                        <text x="728" y="600" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.4)">Oct 14,
+                            2025</text>
+                        <rect x="902" y="587" width="48" height="16" rx="3" fill="rgba(74,222,128,.12)" />
+                        <text x="926" y="598" font-family="sans-serif" font-size="8" fill="#4ade80"
+                            text-anchor="middle">Active</text>
+                        <!-- Row 2 -->
+                        <text x="258" y="624" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.7)">Lafiagi
+                            Secondary School, Kwara</text>
+                        <text x="488" y="624" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.55)">612</text>
+                        <text x="588" y="624" font-family="sans-serif" font-size="9" fill="#c9a84c">488 (79.7%)</text>
+                        <text x="728" y="624" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.4)">Oct 14,
+                            2025</text>
+                        <rect x="902" y="612" width="68" height="16" rx="3" fill="rgba(201,168,76,.12)" />
+                        <text x="936" y="623" font-family="sans-serif" font-size="8" fill="#c9a84c"
+                            text-anchor="middle">Sync Pending</text>
+                        <!-- Row 3 -->
+                        <rect x="252" y="632" width="808" height="26" rx="0" fill="rgba(255,255,255,.02)" />
+                        <text x="258" y="649" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.7)">Federal
+                            Govt College, Enugu</text>
+                        <text x="488" y="649" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.55)">1,024</text>
+                        <text x="588" y="649" font-family="sans-serif" font-size="9" fill="#4ade80">1,008 (98.4%)</text>
+                        <text x="728" y="649" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.4)">Oct 14,
+                            2025</text>
+                        <rect x="902" y="636" width="48" height="16" rx="3" fill="rgba(74,222,128,.12)" />
+                        <text x="926" y="647" font-family="sans-serif" font-size="8" fill="#4ade80"
+                            text-anchor="middle">Active</text>
+                        <!-- Row 4 -->
+                        <text x="258" y="672" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.5)">Unity
+                            Secondary School, Kano</text>
+                        <text x="488" y="672" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.35)">389</text>
+                        <text x="588" y="672" font-family="sans-serif" font-size="9" fill="#f87171">201 (51.7%)</text>
+                        <text x="728" y="672" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.25)">Sep
+                            22, 2025</text>
+                        <rect x="902" y="659" width="68" height="16" rx="3" fill="rgba(248,113,113,.12)" />
+                        <text x="936" y="670" font-family="sans-serif" font-size="8" fill="#f87171"
+                            text-anchor="middle">Action Needed</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="caption-row reveal d1">
+                <div class="caption-box">
+                    <h4>What it does</h4>
+                    <p>Gives the Super Admin a real-time read on system health — wallet creation rate, disbursement
+                        pipeline, school-level compliance — without clicking into individual records. The design
+                        surfaces anomalies (low wallet activation, missed disbursements) as the primary signal.</p>
+                </div>
+                <div class="caption-box">
+                    <h4>Design decision</h4>
+                    <p>Avoided aggregation-only views. The table at the bottom keeps individual schools visible, so a
+                        national-level admin can spot a single school in distress without running a report. Status chips
+                        use a deliberate four-state system: Active, Sync Pending, Action Needed, and Approved — not
+                        boolean.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN: DISBURSEMENT WORKFLOW -->
+    <div class="screen-section" style="background:#0a1520;padding-top:0;padding-bottom:5.5rem">
+        <div class="screens-intro" style="padding-top:5.5rem">
+            <span class="section-label" style="color:var(--gold)">Screen 02</span>
+            <h2 style="color:#fff;margin-bottom:.5rem">Initiator — Create Disbursement</h2>
+            <p style="color:rgba(255,255,255,.45);font-size:.875rem;font-weight:300;max-width:580px;line-height:1.7">
+                The most sensitive interaction in the system. A TVET Initiator configures a disbursement — selects
+                schools, sets amounts, schedules the batch — and submits it to the Reviewer queue. Every decision is
+                logged.
+            </p>
+        </div>
+        <div class="mockup-wrap">
+            <div class="side-by-side">
+                <!-- LEFT: Disbursement form -->
+                <div class="mockup-frame reveal">
+                    <div class="mockup-topbar">
+                        <div class="dot dot-r"></div>
+                        <div class="dot dot-y"></div>
+                        <div class="dot dot-g"></div>
+                    </div>
+                    <svg viewBox="0 0 540 580" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <rect width="540" height="580" fill="#0f1923" />
+                        <!-- Header -->
+                        <rect width="540" height="50" fill="#0d1620" />
+                        <text x="20" y="22" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.3)"
+                            letter-spacing=".5">DISBURSEMENTS</text>
+                        <text x="20" y="40" font-family="Georgia,serif" font-size="14" fill="rgba(255,255,255,.85)">New
+                            Disbursement Request</text>
+                        <!-- Progress steps -->
+                        <circle cx="180" cy="70" r="10" fill="#2d6647" />
+                        <text x="180" y="74" font-family="sans-serif" font-size="8" fill="#fff"
+                            text-anchor="middle">1</text>
+                        <text x="180" y="88" font-family="sans-serif" font-size="7" fill="#4ade80"
+                            text-anchor="middle">Target</text>
+                        <line x1="190" y1="70" x2="260" y2="70" stroke="rgba(255,255,255,.15)" stroke-width="1"
+                            stroke-dasharray="4 3" />
+                        <circle cx="270" cy="70" r="10" fill="#162031" stroke="#c9a84c" stroke-width="1.5" />
+                        <text x="270" y="74" font-family="sans-serif" font-size="8" fill="#c9a84c"
+                            text-anchor="middle">2</text>
+                        <text x="270" y="88" font-family="sans-serif" font-size="7" fill="rgba(255,255,255,.35)"
+                            text-anchor="middle">Amount</text>
+                        <line x1="280" y1="70" x2="350" y2="70" stroke="rgba(255,255,255,.1)" stroke-width="1"
+                            stroke-dasharray="4 3" />
+                        <circle cx="360" cy="70" r="10" fill="#162031" stroke="rgba(255,255,255,.15)"
+                            stroke-width="1" />
+                        <text x="360" y="74" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)"
+                            text-anchor="middle">3</text>
+                        <text x="360" y="88" font-family="sans-serif" font-size="7" fill="rgba(255,255,255,.25)"
+                            text-anchor="middle">Schedule</text>
+                        <!-- Form -->
+                        <text x="20" y="116" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.4)"
+                            letter-spacing=".5">DISBURSEMENT TYPE</text>
+                        <rect x="20" y="122" width="500" height="36" rx="6" fill="#162031"
+                            stroke="rgba(255,255,255,.08)" stroke-width="1" />
+                        <text x="36" y="145" font-family="sans-serif" font-size="11"
+                            fill="rgba(255,255,255,.7)">Recurring Stipend</text>
+                        <text x="496" y="145" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.3)"
+                            text-anchor="end">▾</text>
+
+                        <text x="20" y="178" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.4)"
+                            letter-spacing=".5">TARGET SCOPE</text>
+                        <rect x="20" y="184" width="240" height="32" rx="6" fill="#1a3a2a" stroke="#2d6647"
+                            stroke-width="1.5" />
+                        <text x="40" y="204" font-family="sans-serif" font-size="10" fill="#4ade80">● All Schools
+                            (47)</text>
+                        <rect x="270" y="184" width="120" height="32" rx="6" fill="#162031"
+                            stroke="rgba(255,255,255,.08)" stroke-width="1" />
+                        <text x="290" y="204" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.4)">○ By
+                            State</text>
+                        <rect x="400" y="184" width="120" height="32" rx="6" fill="#162031"
+                            stroke="rgba(255,255,255,.08)" stroke-width="1" />
+                        <text x="418" y="204" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.4)">○ By
+                            School</text>
+
+                        <text x="20" y="240" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.4)"
+                            letter-spacing=".5">ESTIMATED RECIPIENT COUNT</text>
+                        <rect x="20" y="246" width="500" height="52" rx="6" fill="#162031"
+                            stroke="rgba(255,255,255,.05)" stroke-width="1" />
+                        <text x="36" y="268" font-family="Georgia,serif" font-size="22" fill="#fff">10,847</text>
+                        <text x="36" y="286" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.3)">Students
+                            with active wallet status across all 47 enrolled schools</text>
+
+                        <text x="20" y="324" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.4)"
+                            letter-spacing=".5">REFERENCE / DESCRIPTION</text>
+                        <rect x="20" y="330" width="500" height="60" rx="6" fill="#162031"
+                            stroke="rgba(255,255,255,.08)" stroke-width="1" />
+                        <text x="36" y="352" font-family="sans-serif" font-size="10"
+                            fill="rgba(255,255,255,.65)">October 2025 Monthly Stipend — Academic Quarter 3</text>
+                        <text x="36" y="370" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.3)">Batch
+                            reference: TVET-DI-2025-OCT-04</text>
+
+                        <text x="20" y="416" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.4)"
+                            letter-spacing=".5">SUPPORTING DOCUMENTS</text>
+                        <rect x="20" y="422" width="500" height="46" rx="6" fill="#162031"
+                            stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="5 4" />
+                        <text x="270" y="448" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.3)"
+                            text-anchor="middle">↑ Drag files or click to upload (PDF, XLSX)</text>
+
+                        <rect x="20" y="488" width="240" height="36" rx="7" fill="#162031" stroke="rgba(255,255,255,.1)"
+                            stroke-width="1" />
+                        <text x="140" y="511" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.5)"
+                            text-anchor="middle">Save as Draft</text>
+                        <rect x="280" y="488" width="240" height="36" rx="7" fill="#2d6647" />
+                        <text x="400" y="511" font-family="sans-serif" font-size="10" fill="#fff"
+                            text-anchor="middle">Continue to Amount →</text>
+
+                        <text x="270" y="548" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.2)"
+                            text-anchor="middle">All actions are logged. Submissions cannot be recalled once in Reviewer
+                            queue.</text>
+                    </svg>
+                </div>
+
+                <!-- RIGHT: Reviewer queue -->
+                <div class="mockup-frame reveal d2">
+                    <div class="mockup-topbar">
+                        <div class="dot dot-r"></div>
+                        <div class="dot dot-y"></div>
+                        <div class="dot dot-g"></div>
+                    </div>
+                    <svg viewBox="0 0 540 580" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <rect width="540" height="580" fill="#0f1923" />
+                        <rect width="540" height="50" fill="#0d1620" />
+                        <text x="20" y="22" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.3)"
+                            letter-spacing=".5">REVIEW QUEUE</text>
+                        <text x="20" y="40" font-family="Georgia,serif" font-size="14"
+                            fill="rgba(255,255,255,.85)">Pending Your Review</text>
+                        <!-- Filter row -->
+                        <rect x="20" y="58" width="80" height="22" rx="4" fill="#1a3a2a" stroke="#2d6647"
+                            stroke-width="1" />
+                        <text x="60" y="72" font-family="sans-serif" font-size="8" fill="#4ade80"
+                            text-anchor="middle">All (5)</text>
+                        <rect x="108" y="58" width="80" height="22" rx="4" fill="#162031" stroke="rgba(255,255,255,.07)"
+                            stroke-width="1" />
+                        <text x="148" y="72" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.4)"
+                            text-anchor="middle">Urgent (2)</text>
+                        <rect x="196" y="58" width="100" height="22" rx="4" fill="#162031"
+                            stroke="rgba(255,255,255,.07)" stroke-width="1" />
+                        <text x="246" y="72" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.4)"
+                            text-anchor="middle">Needs Info (1)</text>
+
+                        <!-- Queue items -->
+                        <!-- Item 1 - expanded -->
+                        <rect x="20" y="92" width="500" height="130" rx="8" fill="#162031" stroke="rgba(201,168,76,.25)"
+                            stroke-width="1.5" />
+                        <rect x="20" y="92" width="4" height="130" rx="2" fill="#c9a84c" />
+                        <text x="40" y="112" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)"
+                            letter-spacing=".5">DISBURSEMENT REQUEST</text>
+                        <text x="40" y="128" font-family="Georgia,serif" font-size="13" fill="#fff">October Stipend —
+                            Batch 4</text>
+                        <text x="40" y="142" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.4)">Initiated by Adewale Okon · Oct 13, 2025 at 09:41</text>
+                        <rect x="40" y="152" width="500" height="1" fill="rgba(255,255,255,.06)" />
+                        <text x="40" y="170" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.5)">Amount:</text>
+                        <text x="130" y="170" font-family="sans-serif" font-size="9" fill="#fff">₦54,235,000</text>
+                        <text x="280" y="170" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.5)">Recipients:</text>
+                        <text x="370" y="170" font-family="sans-serif" font-size="9" fill="#fff">10,847 students</text>
+                        <text x="40" y="188" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.5)">Scope:</text>
+                        <text x="130" y="188" font-family="sans-serif" font-size="9" fill="#fff">All 47 schools</text>
+                        <text x="280" y="188" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.5)">Schedule:</text>
+                        <text x="370" y="188" font-family="sans-serif" font-size="9" fill="#fff">Oct 15, 2025</text>
+                        <rect x="40" y="200" width="100" height="18" rx="4" fill="#1a3a2a" />
+                        <text x="90" y="213" font-family="sans-serif" font-size="8" fill="#4ade80"
+                            text-anchor="middle">Approve</text>
+                        <rect x="148" y="200" width="80" height="18" rx="4" fill="rgba(248,113,113,.12)"
+                            stroke="#f87171" stroke-width="1" />
+                        <text x="188" y="213" font-family="sans-serif" font-size="8" fill="#f87171"
+                            text-anchor="middle">Reject</text>
+                        <rect x="236" y="200" width="110" height="18" rx="4" fill="rgba(255,255,255,.05)" />
+                        <text x="291" y="213" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.4)"
+                            text-anchor="middle">Request Info</text>
+
+                        <!-- Item 2 -->
+                        <rect x="20" y="234" width="500" height="82" rx="8" fill="#162031"
+                            stroke="rgba(255,255,255,.06)" stroke-width="1" />
+                        <rect x="20" y="234" width="4" height="82" rx="2" fill="#f87171" />
+                        <text x="40" y="256" font-family="Georgia,serif" font-size="12" fill="#fff">November Stipend —
+                            All Schools</text>
+                        <text x="40" y="270" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.35)">Initiated by Chinyere Eze · Oct 20, 2025</text>
+                        <rect x="40" y="280" width="500" height="1" fill="rgba(255,255,255,.05)" />
+                        <text x="40" y="296" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.5)">Amount:
+                            ₦54,235,000 · Missing: supporting documentation</text>
+                        <rect x="408" y="284" width="102" height="18" rx="4" fill="rgba(248,113,113,.1)" />
+                        <text x="459" y="296" font-family="sans-serif" font-size="8" fill="#f87171"
+                            text-anchor="middle">⚠ Docs missing</text>
+
+                        <!-- Item 3 -->
+                        <rect x="20" y="328" width="500" height="68" rx="8" fill="#162031"
+                            stroke="rgba(255,255,255,.06)" stroke-width="1" />
+                        <rect x="20" y="328" width="4" height="68" rx="2" fill="#60a5fa" />
+                        <text x="40" y="350" font-family="Georgia,serif" font-size="12" fill="#fff">Transport Supplement
+                            — Kano State</text>
+                        <text x="40" y="364" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.35)">Initiated by Suleiman Bello · Oct 18, 2025</text>
+                        <text x="40" y="382" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.4)">₦8,200,000 · 1,624 students · Kano schools only</text>
+
+                        <!-- Item 4 -->
+                        <rect x="20" y="408" width="500" height="68" rx="8" fill="#162031"
+                            stroke="rgba(255,255,255,.06)" stroke-width="1" />
+                        <rect x="20" y="408" width="4" height="68" rx="2" fill="#60a5fa" />
+                        <text x="40" y="430" font-family="Georgia,serif" font-size="12" fill="rgba(255,255,255,.7)">Book
+                            Allowance — Q3 2025</text>
+                        <text x="40" y="444" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.3)">Initiated by Adewale Okon · Oct 10, 2025</text>
+                        <text x="40" y="462" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.35)">₦21,694,000 · All schools · Pending 2 days</text>
+
+                        <!-- Audit note -->
+                        <rect x="20" y="494" width="500" height="70" rx="8" fill="rgba(201,168,76,.06)"
+                            stroke="rgba(201,168,76,.15)" stroke-width="1" />
+                        <text x="40" y="516" font-family="sans-serif" font-size="9" fill="rgba(201,168,76,.8)"
+                            font-weight="500">⚡ Audit requirement</text>
+                        <text x="40" y="532" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.4)">All
+                            approve/reject actions require a written comment before submission.</text>
+                        <text x="40" y="548" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.4)">Actions
+                            are timestamped, attributed, and cannot be deleted.</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="caption-row reveal">
+                <div class="caption-box">
+                    <h4>Initiator form — structured input, not free-form</h4>
+                    <p>Every field maps to a downstream consequence: scope affects recipient count, reference IDs feed
+                        the audit trail, document uploads satisfy reviewer requirements. The form was designed to
+                        prevent common errors before submission — not surface them afterward.</p>
+                </div>
+                <div class="caption-box">
+                    <h4>Reviewer queue — contextual, not tabular</h4>
+                    <p>Reviewers see disbursements as decision items — not spreadsheet rows. Urgent flags, missing
+                        document alerts, and one-click action panels were designed so a reviewer can assess and act on a
+                        request in under 90 seconds without leaving the queue.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN: STUDENT + APPROVER -->
+    <div class="screen-section" style="background:#0e0e0d;padding-top:0;padding-bottom:5.5rem">
+        <div class="screens-intro" style="padding-top:5.5rem">
+            <span class="section-label" style="color:var(--gold)">Screen 03 &amp; 04</span>
+            <h2 style="color:#fff;margin-bottom:.5rem">Student Dashboard &amp; Final Approver View</h2>
+            <p style="color:rgba(255,255,255,.45);font-size:.875rem;font-weight:300;max-width:580px;line-height:1.7">
+                Two ends of the same system. The student sees their wallet balance and disbursement history — simple,
+                transparent, trusted. The Approver sees the full workflow audit trail before authorising fund release.
+            </p>
+        </div>
+        <div class="mockup-wrap">
+            <div class="side-by-side">
+                <!-- Student Dashboard -->
+                <div class="mockup-frame reveal">
+                    <div class="mockup-topbar">
+                        <div class="dot dot-r"></div>
+                        <div class="dot dot-y"></div>
+                        <div class="dot dot-g"></div>
+                    </div>
+                    <svg viewBox="0 0 540 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <rect width="540" height="560" fill="#0f1923" />
+                        <!-- Top banner -->
+                        <rect width="540" height="110" fill="#1a3a2a" />
+                        <text x="20" y="32" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.4)"
+                            letter-spacing=".5">TVET STUDENT PORTAL</text>
+                        <text x="20" y="56" font-family="Georgia,serif" font-size="16" fill="#fff">Good morning,
+                            Amina</text>
+                        <text x="20" y="74" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.45)">Government Secondary School, Abuja · SS3</text>
+                        <rect x="20" y="84" width="88" height="18" rx="4" fill="rgba(74,222,128,.15)" />
+                        <text x="64" y="96" font-family="sans-serif" font-size="8" fill="#4ade80" text-anchor="middle">●
+                            NIN Verified</text>
+                        <!-- Wallet card -->
+                        <rect x="20" y="120" width="500" height="90" rx="10" fill="#162031" stroke="rgba(201,168,76,.2)"
+                            stroke-width="1" />
+                        <text x="40" y="144" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)"
+                            letter-spacing=".5">ZENITH WALLET BALANCE</text>
+                        <text x="40" y="176" font-family="Georgia,serif" font-size="28" fill="#fff">₦15,000.00</text>
+                        <text x="40" y="196" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)">Wallet
+                            ID: ZB-TVET-004-88201</text>
+                        <rect x="420" y="130" width="90" height="28" rx="6" fill="#c9a84c" />
+                        <text x="465" y="148" font-family="sans-serif" font-size="9" fill="#0e0e0d" text-anchor="middle"
+                            font-weight="600">View Details</text>
+                        <!-- Notification banner -->
+                        <rect x="20" y="222" width="500" height="38" rx="7" fill="rgba(74,222,128,.07)"
+                            stroke="rgba(74,222,128,.2)" stroke-width="1" />
+                        <text x="40" y="238" font-family="sans-serif" font-size="9" fill="#4ade80">✓ New disbursement
+                            received</text>
+                        <text x="40" y="252" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.4)">October
+                            2025 Stipend — ₦5,000 credited on Oct 15, 2025</text>
+                        <!-- Transaction history -->
+                        <text x="20" y="284" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.4)"
+                            letter-spacing=".5">RECENT TRANSACTIONS</text>
+                        <!-- Tx rows -->
+                        <rect x="20" y="292" width="500" height="44" rx="6" fill="#162031" />
+                        <circle cx="44" cy="314" r="12" fill="#1a3a2a" />
+                        <text x="44" y="318" font-family="sans-serif" font-size="10" fill="#4ade80"
+                            text-anchor="middle">↓</text>
+                        <text x="66" y="308" font-family="sans-serif" font-size="10"
+                            fill="rgba(255,255,255,.75)">October 2025 Stipend</text>
+                        <text x="66" y="324" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.35)">Oct 15,
+                            2025 · TVET Disbursement</text>
+                        <text x="510" y="308" font-family="Georgia,serif" font-size="12" fill="#4ade80"
+                            text-anchor="end">+₦5,000</text>
+                        <text x="510" y="324" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)"
+                            text-anchor="end">Credited</text>
+
+                        <rect x="20" y="342" width="500" height="44" rx="6" fill="rgba(22,32,49,.5)" />
+                        <circle cx="44" cy="364" r="12" fill="#162031" />
+                        <text x="44" y="368" font-family="sans-serif" font-size="10" fill="#c9a84c"
+                            text-anchor="middle">↓</text>
+                        <text x="66" y="358" font-family="sans-serif" font-size="10"
+                            fill="rgba(255,255,255,.6)">September 2025 Stipend</text>
+                        <text x="66" y="374" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)">Sep 15,
+                            2025 · TVET Disbursement</text>
+                        <text x="510" y="358" font-family="Georgia,serif" font-size="12" fill="rgba(255,255,255,.6)"
+                            text-anchor="end">+₦5,000</text>
+
+                        <rect x="20" y="392" width="500" height="44" rx="6" fill="rgba(22,32,49,.5)" />
+                        <circle cx="44" cy="414" r="12" fill="#162031" />
+                        <text x="44" y="418" font-family="sans-serif" font-size="10" fill="#c9a84c"
+                            text-anchor="middle">↓</text>
+                        <text x="66" y="408" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.6)">August
+                            2025 Stipend</text>
+                        <text x="66" y="424" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)">Aug 15,
+                            2025 · TVET Disbursement</text>
+                        <text x="510" y="408" font-family="Georgia,serif" font-size="12" fill="rgba(255,255,255,.6)"
+                            text-anchor="end">+₦5,000</text>
+
+                        <rect x="20" y="442" width="500" height="44" rx="6" fill="rgba(22,32,49,.5)" />
+                        <circle cx="44" cy="464" r="12" fill="#162031" />
+                        <text x="44" y="468" font-family="sans-serif" font-size="10" fill="#c9a84c"
+                            text-anchor="middle">↓</text>
+                        <text x="66" y="458" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.6)">Book
+                            Allowance — Q2</text>
+                        <text x="66" y="474" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)">Jul 01,
+                            2025 · TVET Disbursement</text>
+                        <text x="510" y="458" font-family="Georgia,serif" font-size="12" fill="rgba(255,255,255,.6)"
+                            text-anchor="end">+₦3,000</text>
+
+                        <rect x="20" y="500" width="240" height="32" rx="6" fill="rgba(255,255,255,.05)"
+                            stroke="rgba(255,255,255,.08)" stroke-width="1" />
+                        <text x="140" y="520" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.5)"
+                            text-anchor="middle">↓ Download Statement</text>
+                        <rect x="280" y="500" width="240" height="32" rx="6" fill="rgba(255,255,255,.05)"
+                            stroke="rgba(255,255,255,.08)" stroke-width="1" />
+                        <text x="400" y="520" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.5)"
+                            text-anchor="middle">View All Transactions</text>
+                    </svg>
+                </div>
+
+                <!-- Approver view -->
+                <div class="mockup-frame reveal d2">
+                    <div class="mockup-topbar">
+                        <div class="dot dot-r"></div>
+                        <div class="dot dot-y"></div>
+                        <div class="dot dot-g"></div>
+                    </div>
+                    <svg viewBox="0 0 540 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+                        <rect width="540" height="560" fill="#0f1923" />
+                        <rect width="540" height="50" fill="#0d1620" />
+                        <text x="20" y="22" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.3)"
+                            letter-spacing=".5">FINAL APPROVAL — LEVEL 3</text>
+                        <text x="20" y="40" font-family="Georgia,serif" font-size="14"
+                            fill="rgba(255,255,255,.85)">Disbursement Review &amp; Authorisation</text>
+                        <!-- Summary card -->
+                        <rect x="20" y="60" width="500" height="100" rx="8" fill="#162031" stroke="rgba(201,168,76,.25)"
+                            stroke-width="1.5" />
+                        <text x="40" y="84" font-family="Georgia,serif" font-size="15" fill="#fff">October Stipend —
+                            Batch 4</text>
+                        <text x="40" y="100" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.35)">Ref:
+                            TVET-DI-2025-OCT-04</text>
+                        <rect x="40" y="110" width="500" height="1" fill="rgba(255,255,255,.07)" />
+                        <text x="40" y="128" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.5)">Total
+                            Value:</text>
+                        <text x="150" y="128" font-family="sans-serif" font-size="9" fill="#fff">₦54,235,000</text>
+                        <text x="300" y="128" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.5)">Recipients:</text>
+                        <text x="410" y="128" font-family="sans-serif" font-size="9" fill="#fff">10,847</text>
+                        <text x="40" y="146" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.5)">Scheduled:</text>
+                        <text x="150" y="146" font-family="sans-serif" font-size="9" fill="#fff">Oct 15, 2025</text>
+                        <text x="300" y="146" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.5)">Via:</text>
+                        <text x="410" y="146" font-family="sans-serif" font-size="9" fill="#fff">SwiftLink /
+                            Zenith</text>
+                        <!-- Workflow trail -->
+                        <text x="20" y="180" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.35)"
+                            letter-spacing=".5">APPROVAL TRAIL</text>
+                        <!-- Step 1 -->
+                        <circle cx="36" cy="204" r="10" fill="#2d6647" />
+                        <text x="36" y="208" font-family="sans-serif" font-size="8" fill="#fff"
+                            text-anchor="middle">✓</text>
+                        <line x1="36" y1="214" x2="36" y2="242" stroke="#2d6647" stroke-width="2" />
+                        <text x="54" y="202" font-family="sans-serif" font-size="9"
+                            fill="rgba(255,255,255,.7)">Initiated — Adewale Okon</text>
+                        <text x="54" y="214" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)">Oct 13,
+                            2025 · 09:41 AM</text>
+                        <!-- Step 2 -->
+                        <circle cx="36" cy="254" r="10" fill="#2d6647" />
+                        <text x="36" y="258" font-family="sans-serif" font-size="8" fill="#fff"
+                            text-anchor="middle">✓</text>
+                        <line x1="36" y1="264" x2="36" y2="292" stroke="#2d6647" stroke-width="2" />
+                        <text x="54" y="252" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.7)">Reviewed
+                            &amp; Approved — Ngozi Ike</text>
+                        <text x="54" y="264" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)">Oct 14,
+                            2025 · 11:22 AM</text>
+                        <rect x="54" y="270" width="340" height="22" rx="4" fill="rgba(255,255,255,.04)" />
+                        <text x="62" y="285" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.35)">"All
+                            student records verified. Documentation confirmed. Approved for final sign-off."</text>
+                        <!-- Step 3 - current -->
+                        <circle cx="36" cy="308" r="10" fill="#c9a84c" stroke="#c9a84c" stroke-width="2" />
+                        <text x="36" y="312" font-family="sans-serif" font-size="8" fill="#0e0e0d"
+                            text-anchor="middle">3</text>
+                        <text x="54" y="306" font-family="sans-serif" font-size="9" fill="#c9a84c"
+                            font-weight="500">Final Approval Required — You</text>
+                        <text x="54" y="318" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.3)">Awaiting
+                            your authorisation</text>
+                        <!-- Comment box -->
+                        <text x="20" y="350" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,.35)"
+                            letter-spacing=".5">AUTHORISATION NOTE (required)</text>
+                        <rect x="20" y="358" width="500" height="60" rx="6" fill="#162031" stroke="rgba(201,168,76,.3)"
+                            stroke-width="1.5" />
+                        <text x="36" y="376" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.5)">I
+                            confirm this disbursement has been reviewed and...</text>
+                        <text x="490" y="410" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.25)"
+                            text-anchor="end">48 / 500</text>
+                        <!-- Actions -->
+                        <rect x="20" y="432" width="240" height="38" rx="7" fill="#1a3a2a" stroke="#2d6647"
+                            stroke-width="1.5" />
+                        <text x="140" y="456" font-family="sans-serif" font-size="10" fill="#4ade80"
+                            text-anchor="middle">✓ Authorise Disbursement</text>
+                        <rect x="276" y="432" width="120" height="38" rx="7" fill="rgba(248,113,113,.1)"
+                            stroke="#f87171" stroke-width="1" />
+                        <text x="336" y="456" font-family="sans-serif" font-size="10" fill="#f87171"
+                            text-anchor="middle">Reject</text>
+                        <rect x="404" y="432" width="116" height="38" rx="7" fill="rgba(255,255,255,.05)" />
+                        <text x="462" y="456" font-family="sans-serif" font-size="10" fill="rgba(255,255,255,.35)"
+                            text-anchor="middle">Return</text>
+                        <!-- Warning -->
+                        <rect x="20" y="484" width="500" height="58" rx="7" fill="rgba(248,113,113,.06)"
+                            stroke="rgba(248,113,113,.15)" stroke-width="1" />
+                        <text x="40" y="504" font-family="sans-serif" font-size="9" fill="rgba(248,113,113,.8)"
+                            font-weight="500">⚠ Irreversible action</text>
+                        <text x="40" y="520" font-family="sans-serif" font-size="8"
+                            fill="rgba(255,255,255,.35)">Authorising this disbursement will immediately trigger fund
+                            release</text>
+                        <text x="40" y="534" font-family="sans-serif" font-size="8" fill="rgba(255,255,255,.35)">via
+                            SwiftLink to 10,847 Zenith wallets. This action cannot be undone.</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="caption-row reveal">
+                <div class="caption-box">
+                    <h4>Student view — radical transparency</h4>
+                    <p>Students had zero visibility under the previous system. The design prioritises one thing above
+                        all: confirming that money has arrived, and showing exactly why. NIN verification status, wallet
+                        ID, and a downloadable statement give students the paper trail they previously had to chase.</p>
+                </div>
+                <div class="caption-box">
+                    <h4>Approver view — full context before action</h4>
+                    <p>A final approver who clicks "Authorise" is releasing tens of millions of naira. The design
+                        ensures they see the complete trail — initiator, reviewer comment, amounts, recipients — before
+                        the action button is reachable. The irreversibility warning is not opt-out.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS -->
+    <section id="process">
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">Design Process</span>
+                <h2>How we got from chaos to structure</h2>
+            </div>
+            <div class="process-steps">
+                <div class="process-step reveal d1">
+                    <div class="step-num">01</div>
+                    <div class="step-title">Stakeholder mapping &amp; role discovery</div>
+                    <p class="step-desc">Before drawing a single screen, I mapped every human in the system — TVET
+                        federal staff, Krystal data teams, school admins, Zenith Bank, SwiftLink, students, and parents
+                        — and documented what each needed to do, see, and trust the platform to handle correctly.</p>
+                </div>
+                <div class="process-step reveal d2">
+                    <div class="step-num">02</div>
+                    <div class="step-title">Workflow architecture &amp; data model review</div>
+                    <p class="step-desc">I worked with the product lead to trace every data flow: enrollment sync from
+                        Krystal API, wallet creation via Zenith, disbursement trigger via SwiftLink. Designing the UI
+                        required understanding what state each entity was in at every step — not just what it looked
+                        like.</p>
+                </div>
+                <div class="process-step reveal d3">
+                    <div class="step-num">03</div>
+                    <div class="step-title">Role-specific journey mapping</div>
+                    <p class="step-desc">Six user roles, each with a distinct mental model and task context. I mapped
+                        separate critical paths for each — Super Admin's oversight loop, the three-tier
+                        Initiator-Reviewer-Approver chain, School Admin's sync workflow, and the Student's verification
+                        and visibility needs.</p>
+                </div>
+                <div class="process-step reveal d4">
+                    <div class="step-num">04</div>
+                    <div class="step-title">Iterative prototyping &amp; stakeholder review</div>
+                    <p class="step-desc">High-fidelity prototypes were reviewed with TVET programme officers before any
+                        development began. Key changes emerged from these sessions: the irreversibility warning on final
+                        approval, the mandatory comment field for all decisions, and the resubmission flow for rejected
+                        disbursements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROLE FLOW -->
+    <section id="roleflow">
+        <div class="flow-header reveal">
+            <span class="section-label">Role System</span>
+            <h2 style="color:#fff">Six roles. One coherent system.</h2>
+        </div>
+        <div class="flow-grid">
+            <div class="role-card reveal d1">
+                <span class="role-badge">System-wide</span>
+                <p class="role-name">Super Admin</p>
+                <p class="role-access">Full access · All schools · All data</p>
+                <ul class="role-perms">
+                    <li>Manage all user accounts and role assignments</li>
+                    <li>View system-wide analytics and audit logs</li>
+                    <li>Monitor wallet creation and disbursement health</li>
+                    <li>Generate cross-school reports</li>
+                </ul>
+            </div>
+            <div class="role-card reveal d2">
+                <span class="role-badge">School-scoped</span>
+                <p class="role-name">School Admin</p>
+                <p class="role-access">Single institution · Read + sync</p>
+                <ul class="role-perms">
+                    <li>View students enrolled in their school</li>
+                    <li>Initiate API sync with Krystal</li>
+                    <li>Monitor wallet status for their cohort</li>
+                    <li>View school-level disbursement history</li>
+                </ul>
+            </div>
+            <div class="role-card reveal d3">
+                <span class="role-badge">Level 1</span>
+                <p class="role-name">TVET Initiator</p>
+                <p class="role-access">Disbursement workflow · Create only</p>
+                <ul class="role-perms">
+                    <li>Create and configure disbursement requests</li>
+                    <li>Select school targets and set amounts</li>
+                    <li>Attach supporting documentation</li>
+                    <li>Receive rejections and resubmit</li>
+                </ul>
+            </div>
+            <div class="role-card reveal d1">
+                <span class="role-badge">Level 2</span>
+                <p class="role-name">TVET Reviewer</p>
+                <p class="role-access">Disbursement workflow · Review only</p>
+                <ul class="role-perms">
+                    <li>Review Initiator submissions with full context</li>
+                    <li>Verify student eligibility and data accuracy</li>
+                    <li>Approve, reject, or request documentation</li>
+                    <li>All decisions attributed and timestamped</li>
+                </ul>
+            </div>
+            <div class="role-card reveal d2">
+                <span class="role-badge">Level 3</span>
+                <p class="role-name">TVET Approver</p>
+                <p class="role-access">Final authority · Authorise execution</p>
+                <ul class="role-perms">
+                    <li>Final sign-off on reviewed disbursements</li>
+                    <li>Sees complete workflow trail before acting</li>
+                    <li>Authorises SwiftLink fund release</li>
+                    <li>Sets disbursement schedules and monitors success</li>
+                </ul>
+            </div>
+            <div class="role-card reveal d3">
+                <span class="role-badge">Recipient</span>
+                <p class="role-name">Student &amp; Parent</p>
+                <p class="role-access">Personal data only · Read + verify</p>
+                <ul class="role-perms">
+                    <li>Provide NIN for wallet verification (student)</li>
+                    <li>View wallet balance and transaction history</li>
+                    <li>Download invoices and disbursement receipts</li>
+                    <li>Receive notifications on all credits</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- DESIGN DECISIONS -->
+    <section id="decisions">
+        <div class="container">
+            <div class="reveal">
+                <span class="section-label">Key Design Decisions</span>
+                <h2>Where the real design work happened</h2>
+            </div>
+            <div class="decisions-grid">
+                <div class="decision-card reveal d1">
+                    <div class="decision-icon">⛔</div>
+                    <h3 class="decision-title">Mandatory comments on every approval decision</h3>
+                    <p class="decision-body">Approvers and Reviewers cannot submit an action without a written comment.
+                        This wasn't requested in the PRD — it emerged from observing how verbal approvals had been
+                        abused in the prior system. The UI enforces accountability at the point of action, not through
+                        after-the-fact reporting.</p>
+                </div>
+                <div class="decision-card reveal d2">
+                    <div class="decision-icon">🔄</div>
+                    <h3 class="decision-title">Resubmission flow for rejected disbursements</h3>
+                    <p class="decision-body">Under the previous process, a rejected disbursement had no formal path
+                        back. I designed a rejection → reason → edit → resubmit loop that keeps the workflow moving and
+                        forces Reviewers to document their rejection rationale — creating a learning loop for Initiators
+                        and an evidence chain for auditors.</p>
+                </div>
+                <div class="decision-card reveal d3">
+                    <div class="decision-icon">👁</div>
+                    <h3 class="decision-title">Student-facing NIN verification as trust signal</h3>
+                    <p class="decision-body">Students providing their NIN wasn't just a data requirement — it was a
+                        trust-building moment. I designed the verification flow to surface progress clearly ("NIN
+                        submitted → Under review → Verified"), reducing support requests and giving students a sense of
+                        agency in their own onboarding.</p>
+                </div>
+                <div class="decision-card reveal d1">
+                    <div class="decision-icon">⚠️</div>
+                    <h3 class="decision-title">Irreversibility warning on final authorisation</h3>
+                    <p class="decision-body">Before the Approver can act, a persistent warning communicates exactly what
+                        happens next: funds are released to thousands of wallets, immediately, and cannot be recalled.
+                        This is a friction-by-design decision — the brief pause it creates is the point. High-stakes
+                        action requires deliberate confirmation.</p>
+                </div>
+                <div class="decision-card reveal d2">
+                    <div class="decision-icon">🔗</div>
+                    <h3 class="decision-title">Four-state wallet status model</h3>
+                    <p class="decision-body">Rather than a binary active/inactive wallet view, I designed a four-state
+                        system: Active, Pending, Sync Failed, and Action Needed. This gave school admins and the Super
+                        Admin a precise operational picture — not just whether a wallet exists, but what needs to happen
+                        next to make it function.</p>
+                </div>
+                <div class="decision-card reveal d3">
+                    <div class="decision-icon">📋</div>
+                    <h3 class="decision-title">Role-scoped dashboards, not one dashboard filtered</h3>
+                    <p class="decision-body">Each role gets a dashboard built for their job, not a single view with
+                        permissions applied. A Reviewer's home screen is a prioritised queue. An Approver's is a
+                        decision stage. A Student's is a wallet. These are different mental models — they deserved
+                        different interfaces.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- OUTCOMES -->
+    <section id="outcomes">
+        <div class="container">
+            <div class="outcome-grid">
+                <div class="reveal">
+                    <span class="section-label">Results &amp; Reflection</span>
+                    <h2>What shipping this system actually meant</h2>
+                    <p class="body-text" style="margin-top:.5rem">
+                        The TVET Portal replaced a process that had failed students for years. Disbursements that
+                        previously took weeks to confirm — and were sometimes disputed entirely — now have a documented,
+                        timestamped chain from initiation to wallet credit.
+                    </p>
+                    <p class="body-text">
+                        <strong>10,847 students</strong> across Nigeria now have Zenith Bank wallets tied to their
+                        verified identity. They can see their balance. They can download a receipt. They can show a
+                        parent that money arrived. That's not a small thing.
+                    </p>
+                    <p class="body-text">
+                        For TVET's federal office, the three-tier approval workflow eliminated the informal sign-off
+                        culture that had created audit vulnerabilities. Every naira disbursed now has a documented
+                        decision trail with named approvers.
+                    </p>
+                    <div class="outcome-quote">
+                        <p>"We needed a system that could hold up to scrutiny — from auditors, from state governments,
+                            and from the students themselves. What was delivered gave us that."</p>
+                        <cite>— Programme Director, TVET Implementation Office</cite>
+                    </div>
+                </div>
+                <div class="reveal d2">
+                    <span class="section-label">What I'd do differently</span>
+                    <h2 style="font-size:1.4rem;margin-bottom:1.25rem">Honest reflections from the engagement</h2>
+                    <ul class="learnings">
+                        <li>
+                            <strong>Earlier usability testing with school admins</strong>
+                            The portal was built primarily with TVET federal staff input. School admins — who do the
+                            most repetitive, high-frequency work in the system — were consulted late. Their sync
+                            workflows needed significant adjustment post-launch.
+                        </li>
+                        <li>
+                            <strong>Mobile-first for students from day one</strong>
+                            Students access the portal primarily on mobile. The responsive design was added as a
+                            consideration, not a constraint. In a future version, the student experience would be
+                            designed mobile-native, not desktop-adapted.
+                        </li>
+                        <li>
+                            <strong>Designing for failure states earlier</strong>
+                            The Zenith Bank API and SwiftLink integration had failure modes that weren't fully surfaced
+                            during design. Error states — failed wallet creation, timed-out disbursements — were
+                            retrofitted rather than designed proactively.
+                        </li>
+                        <li>
+                            <strong>A parent-specific onboarding flow</strong>
+                            Parents/guardians were treated as a secondary persona throughout. Given that many guardians
+                            are the primary financial decision-makers in these households, a dedicated parent onboarding
+                            and verification flow would have made the platform significantly more trusted at the
+                            household level.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════ FOOTER ═══════════════ -->
+    <div class="case-footer">
+        <p class="footer-nav-label">Back to portfolio</p>
+        <a href="home.html" class="back-btn">← All Projects</a>
+    </div>
+
+
+    <!-- PAGE TRANSITION OVERLAY -->
+    <div id="pageOverlay" style="
+  position:fixed;inset:0;
+  background:var(--ink);
+  z-index:10000;
+  transform:translateY(0%);
+  transition:transform 0.6s cubic-bezier(0.76,0,0.24,1);
+  pointer-events:all;
+  display:flex;align-items:center;justify-content:center;
+">
+        <span style="
+    font-family:var(--f-display);
+    font-size:1.1rem;
+    color:rgba(255,255,255,.2);
+    letter-spacing:.06em;
+  ">Leye Oladipo</span>
+    </div>
+
+    <script>
+        // ── Entry: slide overlay up on load ──────────────────────
+        const overlay = document.getElementById('pageOverlay');
+        window.addEventListener('load', () => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    overlay.style.transform = 'translateY(-100%)';
+                    overlay.style.pointerEvents = 'none';
+                });
+            });
+        });
+
+        // ── Scroll reveal ────────────────────────────────────────
+        const els = document.querySelectorAll('.reveal');
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+        els.forEach(el => obs.observe(el));
+
+        // ── Exit: intercept back-link and any .html links ────────
+        document.querySelectorAll('a[href$=".html"], .back-btn').forEach(link => {
+            link.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href || href === '#') return;
+                e.preventDefault();
+                // slide overlay down from top
+                overlay.style.transition = 'none';
+                overlay.style.transform = 'translateY(-100%)';
+                overlay.style.pointerEvents = 'all';
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        overlay.style.transition = 'transform 0.55s cubic-bezier(0.76,0,0.24,1)';
+                        overlay.style.transform = 'translateY(0%)';
+                        setTimeout(() => { window.location.href = href; }, 580);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
