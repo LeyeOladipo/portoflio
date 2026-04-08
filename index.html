@@ -917,6 +917,12 @@
 
         /* ── MOBILE ────────────────────────────────── */
         @media (max-width: 900px) {
+
+            .nav-links li.projects,
+            .nav-links li.experience {
+                display: none;
+            }
+
             .hero-grid {
                 grid-template-columns: 1fr;
             }
@@ -952,10 +958,6 @@
 
             .nav-links {
                 gap: 1.25rem;
-            }
-
-            .nav-links li:not(:last-child):not(:nth-last-child(2)) {
-                display: none;
             }
 
             section {
@@ -1024,8 +1026,8 @@
     <nav id="navbar">
         <a href="#" class="logo">Leye <span>Oladipo</span></a>
         <ul class="nav-links">
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#experience">Work Experience</a></li>
+            <li class="projects"><a href="#projects">Projects</a></li>
+            <li class="experience"><a href="#experience">Work Experience</a></li>
             <li><a href="https://drive.google.com/file/d/1CG_ijI_OMimyV2X2ZlpcgnHA4qot1PGC/view?usp=drive_link"
                     target="_blank" class="nav-cta">Download Resume ↓</a></li>
         </ul>
